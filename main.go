@@ -1,5 +1,5 @@
 /*
-* queenx - CLI tool for building projects on target machine
+* queenx - CLI tool for building projects for the QNX4 on target machine
 * Copyright (C) 2019  Roman Serov <roman@serov.co>
 *
 * This program is free software: you can redistribute it and/or modify
