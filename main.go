@@ -96,11 +96,11 @@ func remote_transfer(local_path string, remote_path string, host string) error {
 }
 
 func project_init(config Configuration) error {
-	fmt.Println("Checking project dirs on remote host...")
+	fmt.Println(" -- Checking project dirs on remote host...")
 
 	var path_prj = fmt.Sprintf("%s/%s", config.Remote.Proejcts_path, config.Local.Project_name)
 
-	fmt.Printf("[%s]: ", path_prj)
+	fmt.Printf(" -- [%s]: ", path_prj)
 
 	if remote_check_dir(path_prj, config.Remote.Host) == true {
 		fmt.Println("OK")
@@ -119,7 +119,7 @@ func project_init(config Configuration) error {
 	for _, dir := range config.Local.Project_dirs {
 		var path = fmt.Sprintf("%s/%s", path_prj, dir)
 
-		fmt.Printf("[%s]: ", path)
+		fmt.Printf(" -- [%s]: ", path)
 
 		if remote_check_dir(path, config.Remote.Host) == true {
 			fmt.Println("OK")
@@ -141,10 +141,10 @@ func project_init(config Configuration) error {
 func project_build(config Configuration) error {
 	var path_prj = fmt.Sprintf("%s/%s", config.Remote.Proejcts_path, config.Local.Project_name)
 
-	fmt.Println("Transferring files to remote host...")
+	fmt.Println(" -- Transferring files to remote host...")
 
 	for _, path := range config.Local.Project_dirs {
-		fmt.Printf("[%s]: ", path)
+		fmt.Printf(" -- [./%s --> %s/%s]: ", path, path_prj, path)
 
 		var path_remote = fmt.Sprintf("root@%s:%s", config.Remote.Host, path_prj)
 		var path_local = fmt.Sprintf("./%s", path)
@@ -164,7 +164,7 @@ func project_build(config Configuration) error {
 	}
 
 	for _, file := range config.Local.Project_files {
-		fmt.Printf("[%s]: ", file)
+		fmt.Printf(" -- [./%s --> %s/%s]: ", file, path_prj, file)
 
 		var path_remote = fmt.Sprintf("root@%s:%s/", config.Remote.Host, path_prj)
 		var path_local = fmt.Sprintf("./%s", file)
@@ -182,6 +182,8 @@ func project_build(config Configuration) error {
 			return err
 		}
 	}
+
+	fmt.Println(" -- Building...")
 
 	var ssh_host = fmt.Sprintf("root@%s", config.Remote.Host)
 	var ssh_cmd = fmt.Sprintf("cd %s && make clean && make", path_prj)
@@ -218,7 +220,7 @@ func main() {
 	config, err := load_configuration()
 
 	if err != nil {
-		fmt.Printf("Couldn't open project configuration file: %v", err)
+		fmt.Printf("Couldn't open project configuration file: %v\n", err)
 		os.Exit(1)
 	}
 
