@@ -242,18 +242,24 @@ func project_build(config Configuration) error {
 	return nil
 }
 
-func project_run(config Configuration, args []string) {
+func project_run(config Configuration, args []string, node uint) {
 	var ssh_host = fmt.Sprintf("root@%s", config.Remote.Host)
 	var path_prj = fmt.Sprintf("%s/%s", config.Remote.Proejcts_path, config.Local.Project_name)
-	var prj_cmd = fmt.Sprintf("cd %s/bin && ./%s", path_prj, config.Local.Project_name)
-
+	var prj_cmd string
+	var cmd *exec.Cmd
 	var args_str string
 
 	for _, arg := range args {
 		args_str += fmt.Sprintf("\"%s\" ", arg)
 	}
 
-	cmd := exec.Command(ssh_path, "-t", "-t", ssh_host, prj_cmd, args_str)
+	if node == 0 {
+		prj_cmd = fmt.Sprintf("cd %s/bin && ./%s", path_prj, config.Local.Project_name)
+	} else {
+		prj_cmd = fmt.Sprintf("cd %s/bin && on -n%d ./%s", path_prj, node, config.Local.Project_name)
+	}
+
+	cmd = exec.Command(ssh_path, "-t", "-t", ssh_host, prj_cmd, args_str)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -281,6 +287,7 @@ func main() {
 	}
 
 	host_ptr := flag.String("h", config.Remote.Host, "Host name")
+	node_ptr := flag.Uint("n", 0, "Run on the node")
 
 	flag.Parse()
 
@@ -326,7 +333,7 @@ func main() {
 		}
 	case "run":
 		{
-			project_run(config, flag.Args()[1:])
+			project_run(config, flag.Args()[1:], *node_ptr)
 		}
 	}
 }
