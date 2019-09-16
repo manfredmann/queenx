@@ -194,6 +194,26 @@ func project_build(config Configuration) error {
 	return cmd.Run()
 }
 
+func project_run(config Configuration, args []string) {
+	var ssh_host = fmt.Sprintf("root@%s", config.Remote.Host)
+	var path_prj = fmt.Sprintf("%s/%s", config.Remote.Proejcts_path, config.Local.Project_name)
+	var prj_cmd = fmt.Sprintf("cd %s/bin && ./%s", path_prj, config.Local.Project_name)
+
+	var args_str string
+
+	for _, arg := range args {
+		args_str += fmt.Sprintf("\"%s\" ", arg)
+	}
+
+	cmd := exec.Command(ssh_path, "-t", "-t", ssh_host, prj_cmd, args_str)
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+
+	cmd.Run()
+}
+
 func main() {
 	config, err := load_configuration()
 
@@ -220,6 +240,10 @@ func main() {
 	case "init":
 		{
 			project_init(config)
+		}
+	case "run":
+		{
+			project_run(config, flag.Args()[1:])
 		}
 	}
 }

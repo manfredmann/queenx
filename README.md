@@ -86,3 +86,9 @@ Warning(1027): file obj/game.o(/root/projects/PtSoko/src/game.cpp): redefinition
 Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition of _PxImageFunc ignored
 ~/q/p/PtSoko > 
 ```
+
+Можно запустить собранный проект через ssh сессиию выполнив
+```
+ > queenx run
+```
+Все аргументы cli после run будут переданы запускаемому приложению. Бинарник должен лежать в bin/ и иметь имя, соответствующее названию проекта (возможно вынесу это в конфигурацию проекта)
