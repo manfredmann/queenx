@@ -101,7 +101,7 @@ func remote_transfer(local_path string, remote_path string, host string) error {
 }
 
 func project_init(config Configuration) error {
-	fmt.Println("\033[1;37m -- Checking project dirs on remote host...\033[0m")
+	fmt.Println("\033[1;37m -- Checking the project dirs on remote host...\033[0m")
 
 	var path_prj = fmt.Sprintf("%s/%s", config.Remote.Proejcts_path, config.Local.Project_name)
 
@@ -265,8 +265,18 @@ func main() {
 	config, err := load_configuration()
 
 	if err != nil {
-		fmt.Printf("Couldn't open project configuration file: %v\n", err)
+		fmt.Printf("Couldn't open the project configuration file: %v\n", err)
 		os.Exit(1)
+	}
+
+	flag.Usage = func() {
+		fmt.Printf("Usage: %s [-h hostname] action\n\n", os.Args[0])
+		fmt.Println("  action")
+		fmt.Println("    init   - Init the directory structure")
+		fmt.Println("    build  - Build the project")
+		fmt.Println("    run    - Run the app")
+		fmt.Println("")
+		flag.PrintDefaults()
 	}
 
 	host_ptr := flag.String("h", config.Remote.Host, "Host name")
@@ -274,6 +284,7 @@ func main() {
 	flag.Parse()
 
 	if flag.NArg() == 0 {
+		flag.Usage()
 		os.Exit(0)
 	}
 
