@@ -37,6 +37,11 @@ type Configuration struct {
 		Host          string `yaml:"host"`
 		Proejcts_path string `yaml:"projects_path"`
 	} `yaml:"remote"`
+	Build struct {
+		Cmd_pre   string `yaml:"cmd_pre"`
+		Cmd_build string `yaml:"cmd_build"`
+		Cmd_post  string `yaml:"cmd_post"`
+	} `yaml:"build"`
 }
 
 var scp_path = "/usr/bin/scp"
@@ -96,43 +101,43 @@ func remote_transfer(local_path string, remote_path string, host string) error {
 }
 
 func project_init(config Configuration) error {
-	fmt.Println(" -- Checking project dirs on remote host...")
+	fmt.Println("\033[1;37m -- Checking project dirs on remote host...\033[0m")
 
 	var path_prj = fmt.Sprintf("%s/%s", config.Remote.Proejcts_path, config.Local.Project_name)
 
-	fmt.Printf(" -- [%s]: ", path_prj)
+	fmt.Printf("\033[1;37m -- [%s]: ", path_prj)
 
 	if remote_check_dir(path_prj, config.Remote.Host) == true {
-		fmt.Println("OK")
+		fmt.Println("OK\033[0m")
 	} else {
 		fmt.Printf("Creating... ")
 		err := remote_create_dir(path_prj, config.Remote.Host)
 
 		if err != nil {
-			fmt.Printf("Error %v", err)
+			fmt.Printf("Error %v\033[0m", err)
 			return err
 		}
 
-		fmt.Println("OK")
+		fmt.Println("OK\033[0m")
 	}
 
 	for _, dir := range config.Local.Project_dirs {
 		var path = fmt.Sprintf("%s/%s", path_prj, dir)
 
-		fmt.Printf(" -- [%s]: ", path)
+		fmt.Printf("\033[1;37m -- [%s]: ", path)
 
 		if remote_check_dir(path, config.Remote.Host) == true {
-			fmt.Println("OK")
+			fmt.Println("OK\033[0m")
 		} else {
 			fmt.Printf("Creating... ")
 			err := remote_create_dir(path, config.Remote.Host)
 
 			if err != nil {
-				fmt.Printf("Error %v", err)
+				fmt.Printf("Error %v\033[0m", err)
 				return err
 			}
 
-			fmt.Println("OK")
+			fmt.Println("OK\033[0m")
 		}
 	}
 	return nil
@@ -141,20 +146,20 @@ func project_init(config Configuration) error {
 func project_build(config Configuration) error {
 	var path_prj = fmt.Sprintf("%s/%s", config.Remote.Proejcts_path, config.Local.Project_name)
 
-	fmt.Println(" -- Transferring files to remote host...")
+	fmt.Println("\033[1;37m -- Transferring files to remote host...\033[0m")
 
 	for _, path := range config.Local.Project_dirs {
-		fmt.Printf(" -- [./%s --> %s/%s]: ", path, path_prj, path)
+		fmt.Printf("\033[1;37m -- [./%s --> %s/%s]: ", path, path_prj, path)
 
 		var path_remote = fmt.Sprintf("root@%s:%s", config.Remote.Host, path_prj)
 		var path_local = fmt.Sprintf("./%s", path)
 
 		if _, err := os.Stat(path_local); os.IsNotExist(err) {
-			fmt.Println("Skip")
+			fmt.Println("Skip\033[0m")
 			continue
 		}
 
-		fmt.Println("")
+		fmt.Println("\033[0m")
 
 		err := remote_transfer(path_local, path_remote, config.Remote.Host)
 
@@ -164,17 +169,17 @@ func project_build(config Configuration) error {
 	}
 
 	for _, file := range config.Local.Project_files {
-		fmt.Printf(" -- [./%s --> %s/%s]: ", file, path_prj, file)
+		fmt.Printf("\033[1;37m -- [./%s --> %s/%s]: ", file, path_prj, file)
 
 		var path_remote = fmt.Sprintf("root@%s:%s/", config.Remote.Host, path_prj)
 		var path_local = fmt.Sprintf("./%s", file)
 
 		if _, err := os.Stat(path_local); os.IsNotExist(err) {
-			fmt.Println("Skip")
+			fmt.Println("Skip\033[0m")
 			continue
 		}
 
-		fmt.Println("")
+		fmt.Println("\033[0m")
 
 		err := remote_transfer(path_local, path_remote, config.Remote.Host)
 
@@ -183,17 +188,54 @@ func project_build(config Configuration) error {
 		}
 	}
 
-	fmt.Println(" -- Building...")
-
+	var ssh_cmd string
+	var cmd *exec.Cmd
+	var err error
 	var ssh_host = fmt.Sprintf("root@%s", config.Remote.Host)
-	var ssh_cmd = fmt.Sprintf("cd %s && make clean && make", path_prj)
 
-	cmd := exec.Command(ssh_path, ssh_host, ssh_cmd)
+	if len(config.Build.Cmd_pre) != 0 {
+		fmt.Println("\033[1;37m -- Prebuild...\033[0m")
+		ssh_cmd = fmt.Sprintf("cd %s && %s", path_prj, config.Build.Cmd_pre)
 
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+		cmd = exec.Command(ssh_path, ssh_host, ssh_cmd)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
 
-	return cmd.Run()
+		if err != nil {
+			return err
+		}
+	}
+
+	if len(config.Build.Cmd_build) != 0 {
+		fmt.Println("\033[1;37m -- Build...\033[0m")
+		ssh_cmd = fmt.Sprintf("cd %s && %s", path_prj, config.Build.Cmd_build)
+
+		cmd = exec.Command(ssh_path, ssh_host, ssh_cmd)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+
+		if err != nil {
+			return err
+		}
+	}
+
+	if len(config.Build.Cmd_post) != 0 {
+		fmt.Println("\033[1;37m -- Postbuild...\033[0m")
+		ssh_cmd = fmt.Sprintf("cd %s && %s", path_prj, config.Build.Cmd_post)
+
+		cmd = exec.Command(ssh_path, ssh_host, ssh_cmd)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func project_run(config Configuration, args []string) {
