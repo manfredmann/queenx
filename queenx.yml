@@ -1,17 +1,25 @@
 local:
+  # Имя проекта
   project_name: "pname"
-  project_dirs: 
+  # Каталоги, которые буду скопированы
+  project_dirs:
     - inc
     - src
     - lib
     - obj
     - bin
+  # Файлы, которые будут скопированы
   project_files:
     - Makefile
 remote:
+  # Адрес машины
   host: "qnx4vm"
+  # Путь, по которому будет создан каталог с именем проекта
   projects_path: "/root/projects"
 build:
+  # Выполняется перед сборкой
   cmd_pre: "make clean"
+  # Сборка
   cmd_build: "make"
+  # Выполняется после сборки
   cmd_post: ""
