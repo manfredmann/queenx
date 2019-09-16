@@ -7,6 +7,8 @@
 - Копирует каталоги и файлы из текущего каталога в соответствии с описанием проекта в файле конфигурации
 - Выполняет на хосте с QNX4 make clean && make (позже добавлю команду выполнения сборки в файл конфигурации проекта) 
 
+Можно было бы написать хитровывернутый Makefile, но я из другой категории извращенцев.
+
 // Заранее прошу прощения за мой кривой английский, можете мне в этом помочь (всем как обычно пофиг).
 
 #### Требования
@@ -15,7 +17,8 @@
 
 #### Как пользоваться
 Положить в каталог с  проектом файл конфигурации project.queenx.yml, пример:
-```local:
+```
+local:
   project_name: "PtSoko" //Имя проекта
   project_dirs:  // Каталоги, которые буду скопированы
     - src
@@ -32,7 +35,7 @@ remote:
 
 ```
 ~/q/p/PtSoko > queenx init
-Checking project dir's on remote host...
+Checking project dirs on remote host...
 [/root/projects/PtSoko]: Creating... OK
 [/root/projects/PtSoko/src]: Creating... OK
 [/root/projects/PtSoko/obj]: Creating... OK
