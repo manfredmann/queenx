@@ -25,6 +25,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 type Configuration struct {
@@ -289,6 +290,30 @@ func main() {
 	}
 
 	config.Remote.Host = *host_ptr
+
+	config.Local.Project_name = strings.TrimSpace(config.Local.Project_name)
+	config.Remote.Proejcts_path = strings.TrimSpace(config.Remote.Proejcts_path)
+	config.Remote.Host = strings.TrimSpace(config.Remote.Host)
+
+	if len(config.Local.Project_name) == 0 {
+		fmt.Println("You must specify the project name")
+		os.Exit(0)
+	}
+
+	if len(config.Local.Project_dirs) == 0 && len(config.Local.Project_files) == 0 {
+		fmt.Println("You must specify the project dirs or/and files")
+		os.Exit(0)
+	}
+
+	if len(config.Remote.Proejcts_path) == 0 {
+		fmt.Println("You must specify the remote projects path")
+		os.Exit(0)
+	}
+
+	if len(config.Remote.Host) == 0 {
+		fmt.Println("You must specify the remote host")
+		os.Exit(0)
+	}
 
 	switch flag.Arg(0) {
 	case "build":
