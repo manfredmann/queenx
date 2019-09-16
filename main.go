@@ -96,7 +96,7 @@ func remote_transfer(local_path string, remote_path string, host string) error {
 }
 
 func project_init(config Configuration) error {
-	fmt.Println("Checking project dir's on remote host...")
+	fmt.Println("Checking project dirs on remote host...")
 
 	var path_prj = fmt.Sprintf("%s/%s", config.Remote.Proejcts_path, config.Local.Project_name)
 
