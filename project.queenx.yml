@@ -1,0 +1,13 @@
+local:
+  project_name: "pname"
+  project_dirs: 
+    - inc
+    - src
+    - lib
+    - obj
+    - bin
+  project_files:
+    - Makefile
+remote:
+  host: "qnx4vm"
+  projects_path: "/root/projects"
