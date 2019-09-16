@@ -45,7 +45,7 @@ var ssh_path = "/usr/bin/ssh"
 func load_configuration() (Configuration, error) {
 	var config Configuration
 
-	source, err := ioutil.ReadFile("project.queenx.yml")
+	source, err := ioutil.ReadFile("queenx.yml")
 
 	if err != nil {
 		return config, err
