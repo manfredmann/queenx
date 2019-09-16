@@ -59,6 +59,7 @@ build:
 
 Ну и соберём проект
 ```
+~/q/p/PtSoko > queenx build
  -- Transferring files to remote host...
  -- [./src --> /root/projects/PtSoko/src]: 
 box.cpp                                                                                                                                                                                                   100% 2170   579.4KB/s   00:00    
