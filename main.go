@@ -197,9 +197,10 @@ func project_build(config Configuration) error {
 		fmt.Println("\033[1;37m -- Prebuild...\033[0m")
 		ssh_cmd = fmt.Sprintf("cd %s && %s", path_prj, config.Build.Cmd_pre)
 
-		cmd = exec.Command(ssh_path, ssh_host, ssh_cmd)
+		cmd = exec.Command(ssh_path, "-t", "-o LogLevel=QUIET", ssh_host, ssh_cmd)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
 		err = cmd.Run()
 
 		if err != nil {
@@ -211,9 +212,10 @@ func project_build(config Configuration) error {
 		fmt.Println("\033[1;37m -- Build...\033[0m")
 		ssh_cmd = fmt.Sprintf("cd %s && %s", path_prj, config.Build.Cmd_build)
 
-		cmd = exec.Command(ssh_path, ssh_host, ssh_cmd)
+		cmd = exec.Command(ssh_path, "-t", "-o LogLevel=QUIET", ssh_host, ssh_cmd)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
 		err = cmd.Run()
 
 		if err != nil {
@@ -225,9 +227,10 @@ func project_build(config Configuration) error {
 		fmt.Println("\033[1;37m -- Postbuild...\033[0m")
 		ssh_cmd = fmt.Sprintf("cd %s && %s", path_prj, config.Build.Cmd_post)
 
-		cmd = exec.Command(ssh_path, ssh_host, ssh_cmd)
+		cmd = exec.Command(ssh_path, "-t", "-o LogLevel=QUIET", ssh_host, ssh_cmd)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
 		err = cmd.Run()
 
 		if err != nil {
