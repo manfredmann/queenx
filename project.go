@@ -92,7 +92,7 @@ func (prj *Project) Init(reinit bool) error {
 		}
 	}
 
-	fmt.Println("\033[1;37m -- Checking the project dirs on remote host...\033[0m")
+	fmt.Println("\033[1;37m -- Checking the directory structure on remote host...\033[0m")
 
 	fmt.Printf("\033[1;37m -- [%s]: ", prj.remote_path)
 
