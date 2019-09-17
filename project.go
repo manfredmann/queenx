@@ -61,6 +61,12 @@ func (prj *Project) remote_create_dir(path string) error {
 	return cmd.Run()
 }
 
+func (prj *Project) remote_remove_dir(path string) error {
+	cmd := exec.Command(bin_ssh, prj.remote_host, "rm -r", path)
+
+	return cmd.Run()
+}
+
 func (prj *Project) remote_transfer(local_path string, remote_path string) error {
 	cmd := exec.Command(bin_scp, "-r", local_path, remote_path)
 
@@ -70,7 +76,22 @@ func (prj *Project) remote_transfer(local_path string, remote_path string) error
 	return cmd.Run()
 }
 
-func (prj *Project) Init() error {
+func (prj *Project) Init(reinit bool) error {
+	if reinit {
+		fmt.Printf("\033[1;37m -- Removing the directory structure on remote host...\033[0m")
+		if prj.remote_check_dir(prj.remote_path) == true {
+			err := prj.remote_remove_dir(prj.remote_path)
+			if err == nil {
+				fmt.Println("OK\033[0m")
+			} else {
+				fmt.Printf("Error %v\033[0m", err)
+				return err
+			}
+		} else {
+			fmt.Println("Nothing to do\033[0m")
+		}
+	}
+
 	fmt.Println("\033[1;37m -- Checking the project dirs on remote host...\033[0m")
 
 	fmt.Printf("\033[1;37m -- [%s]: ", prj.remote_path)

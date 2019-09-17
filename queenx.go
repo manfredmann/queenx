@@ -67,6 +67,7 @@ func main() {
 
 	host_ptr := flag.String("h", config.Remote.Host, "Host name")
 	node_ptr := flag.Uint("n", 0, "Run on the node")
+	reinit_ptr := flag.Bool("r", false, "Reinit (the directory structure on remote host will be removed)")
 
 	flag.Parse()
 
@@ -106,11 +107,12 @@ func main() {
 	switch flag.Arg(0) {
 	case "build":
 		{
+			prj.Init(*reinit_ptr)
 			prj.Build()
 		}
 	case "init":
 		{
-			prj.Init()
+			prj.Init(*reinit_ptr)
 		}
 	case "run":
 		{
