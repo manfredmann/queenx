@@ -113,7 +113,7 @@ Warning(1027): file obj/game.o(/root/projects/PtSoko/src/game.cpp): redefinition
 Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition of _PxImageFunc ignored
 ```
 
-Можно запустить собранный проект через ssh сессиию выполнив
+Можно запустить собранный проект через ssh сессию выполнив
 ```
  > queenx run
 ```
