@@ -68,8 +68,7 @@ func (prj *Project) remote_remove_dir(path string) error {
 }
 
 func (prj *Project) remote_transfer(local_path string, remote_path string) error {
-	// rsync
-	cmd := exec.Command(bin_rsync, "-ruv", local_path, remote_path)
+	cmd := exec.Command(bin_rsync, "-ru", "-P", local_path, remote_path)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

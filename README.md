@@ -18,7 +18,7 @@ localhost:
 * rsync
 
 qnx4:
-* OpenSSH
+* Сервер OpenSSH
 
 ## Как пользоваться
 Положить в каталог с  проектом файл конфигурации queenx.yml, пример:
@@ -77,45 +77,49 @@ build:
  -- [./src --> /root/projects/PtSoko/src]: 
 sending incremental file list
 src/box.cpp
+          2,170 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=7/9)
 src/box_place.cpp
+          1,725 100%    1.65MB/s    0:00:00 (xfr#2, to-chk=6/9)
 src/brick.cpp
+          1,804 100%    1.72MB/s    0:00:00 (xfr#3, to-chk=5/9)
 src/game.cpp
+         20,998 100%   20.03MB/s    0:00:00 (xfr#4, to-chk=4/9)
 src/help.cpp
+            257 100%  250.98kB/s    0:00:00 (xfr#5, to-chk=3/9)
 src/main.cpp
+          1,029 100% 1004.88kB/s    0:00:00 (xfr#6, to-chk=2/9)
 src/object.cpp
+            809 100%  790.04kB/s    0:00:00 (xfr#7, to-chk=1/9)
 src/player.cpp
-
-sent 31,278 bytes  received 169 bytes  62,894.00 bytes/sec
-total size is 30,695  speedup is 0.98
+          1,903 100%    1.81MB/s    0:00:00 (xfr#8, to-chk=0/9)
  -- [./inc --> /root/projects/PtSoko/inc]: 
 sending incremental file list
 inc/box.h
+          1,281 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=6/8)
 inc/box_place.h
+          1,181 100%    1.13MB/s    0:00:00 (xfr#2, to-chk=5/8)
 inc/brick.h
+          1,222 100%    1.17MB/s    0:00:00 (xfr#3, to-chk=4/8)
 inc/game.h
+          3,582 100%    3.42MB/s    0:00:00 (xfr#4, to-chk=3/8)
 inc/help.h
+            164 100%  160.16kB/s    0:00:00 (xfr#5, to-chk=2/8)
 inc/object.h
+          1,550 100%    1.48MB/s    0:00:00 (xfr#6, to-chk=1/8)
 inc/player.h
-
-sent 10,723 bytes  received 150 bytes  21,746.00 bytes/sec
-total size is 10,228  speedup is 0.94
+          1,248 100%    1.19MB/s    0:00:00 (xfr#7, to-chk=0/8)
  -- [./obj --> /root/projects/PtSoko/obj]: 
 sending incremental file list
 obj/.placeholder
-
-sent 118 bytes  received 36 bytes  102.67 bytes/sec
-total size is 0  speedup is 0.00
+              0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
  -- [./bin --> /root/projects/PtSoko/bin]: 
 sending incremental file list
 bin/.placeholder
-sent 118 bytes  received 36 bytes  308.00 bytes/sec
-total size is 0  speedup is 0.00
+              0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
  -- [./Makefile --> /root/projects/PtSoko/Makefile]: 
 sending incremental file list
 Makefile
-
-sent 790 bytes  received 35 bytes  1,650.00 bytes/sec
-total size is 699  speedup is 0.85
+            699 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/1)
  -- Prebuild...
  -- Nothing to do
  -- Build...
