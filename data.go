@@ -38,5 +38,5 @@ type Configuration struct {
 	} `yaml:"build"`
 }
 
-var bin_ssh = "/usr/bin/ssh"
-var bin_rsync = "/usr/bin/rsync"
+var bin_ssh = "ssh"
+var bin_rsync = "rsync"

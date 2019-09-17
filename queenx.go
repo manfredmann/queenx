@@ -123,20 +123,31 @@ func main() {
 	switch flag.Arg(0) {
 	case "build":
 		{
-			prj.Init(*reinit_ptr)
-			prj.Build()
+			err = prj.Init(*reinit_ptr)
+
+			if err != nil {
+				fmt.Printf("Error: %v\n", err)
+				os.Exit(1)
+			}
+
+			err = prj.Build()
 		}
 	case "clean":
 		{
-			prj.Clean()
+			err = prj.Clean()
 		}
 	case "init":
 		{
-			prj.Init(*reinit_ptr)
+			err = prj.Init(*reinit_ptr)
 		}
 	case "run":
 		{
 			prj.Run(flag.Args()[1:], *node_ptr)
 		}
+	}
+
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
 	}
 }
