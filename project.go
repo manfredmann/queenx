@@ -42,7 +42,7 @@ func ProjectInit(config *Configuration) *Project {
 	return project
 }
 
-func (prj *Project) remote_check_dir(path string, host string) bool {
+func (prj *Project) remote_check_dir(path string) bool {
 	ssh_dir := fmt.Sprintf("[ -d \"%s\" ];", path)
 	cmd := exec.Command(bin_ssh, prj.ssh_host, ssh_dir)
 
@@ -55,13 +55,13 @@ func (prj *Project) remote_check_dir(path string, host string) bool {
 	}
 }
 
-func (prj *Project) remote_create_dir(path string, host string) error {
+func (prj *Project) remote_create_dir(path string) error {
 	cmd := exec.Command(bin_ssh, prj.ssh_host, "mkdir", path)
 
 	return cmd.Run()
 }
 
-func (prj *Project) remote_transfer(local_path string, remote_path string, host string) error {
+func (prj *Project) remote_transfer(local_path string, remote_path string) error {
 	cmd := exec.Command(bin_scp, "-r", local_path, remote_path)
 
 	cmd.Stdout = os.Stdout
@@ -77,11 +77,11 @@ func (prj *Project) Init() error {
 
 	fmt.Printf("\033[1;37m -- [%s]: ", prj.remote_path)
 
-	if prj.remote_check_dir(prj.remote_path, prj.config.Remote.Host) == true {
+	if prj.remote_check_dir(prj.remote_path) == true {
 		fmt.Println("OK\033[0m")
 	} else {
 		fmt.Printf("Creating... ")
-		err := prj.remote_create_dir(prj.remote_path, prj.config.Remote.Host)
+		err := prj.remote_create_dir(prj.remote_path)
 
 		if err != nil {
 			fmt.Printf("Error %v\033[0m", err)
@@ -96,11 +96,11 @@ func (prj *Project) Init() error {
 
 		fmt.Printf("\033[1;37m -- [%s]: ", path)
 
-		if prj.remote_check_dir(path, prj.config.Remote.Host) == true {
+		if prj.remote_check_dir(path) == true {
 			fmt.Println("OK\033[0m")
 		} else {
 			fmt.Printf("Creating... ")
-			err := prj.remote_create_dir(path, prj.config.Remote.Host)
+			err := prj.remote_create_dir(path)
 
 			if err != nil {
 				fmt.Printf("Error %v\033[0m", err)
@@ -129,7 +129,7 @@ func (prj *Project) Build() error {
 
 		fmt.Println("\033[0m")
 
-		err := prj.remote_transfer(path_local, path_remote, prj.config.Remote.Host)
+		err := prj.remote_transfer(path_local, path_remote)
 
 		if err != nil {
 			return err
@@ -149,7 +149,7 @@ func (prj *Project) Build() error {
 
 		fmt.Println("\033[0m")
 
-		err := prj.remote_transfer(path_local, path_remote, prj.config.Remote.Host)
+		err := prj.remote_transfer(path_local, path_remote)
 
 		if err != nil {
 			return err
