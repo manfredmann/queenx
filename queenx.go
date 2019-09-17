@@ -60,6 +60,7 @@ func main() {
 		fmt.Println("  action")
 		fmt.Println("    init   - Init the directory structure")
 		fmt.Println("    build  - Build the project")
+		fmt.Println("    clean  - Clean the project")
 		fmt.Println("    run    - Run the app")
 		fmt.Println("")
 		flag.PrintDefaults()
@@ -73,33 +74,48 @@ func main() {
 
 	if flag.NArg() == 0 {
 		flag.Usage()
-		os.Exit(0)
+		os.Exit(1)
 	}
 
 	config.Remote.Host = *host_ptr
 
 	config.Local.Project_name = strings.TrimSpace(config.Local.Project_name)
+
 	config.Remote.Proejcts_path = strings.TrimSpace(config.Remote.Proejcts_path)
 	config.Remote.Host = strings.TrimSpace(config.Remote.Host)
 
+	config.Build.Cmd_build = strings.TrimSpace(config.Build.Cmd_build)
+	config.Build.Cmd_clean = strings.TrimSpace(config.Build.Cmd_clean)
+	config.Build.Cmd_post = strings.TrimSpace(config.Build.Cmd_post)
+	config.Build.Cmd_pre = strings.TrimSpace(config.Build.Cmd_pre)
+
 	if len(config.Local.Project_name) == 0 {
 		fmt.Println("You must specify the project name")
-		os.Exit(0)
+		os.Exit(1)
 	}
 
 	if len(config.Local.Project_dirs) == 0 && len(config.Local.Project_files) == 0 {
 		fmt.Println("You must specify the project dirs or/and files")
-		os.Exit(0)
+		os.Exit(1)
 	}
 
 	if len(config.Remote.Proejcts_path) == 0 {
 		fmt.Println("You must specify the remote projects path")
-		os.Exit(0)
+		os.Exit(1)
 	}
 
 	if len(config.Remote.Host) == 0 {
 		fmt.Println("You must specify the remote host")
-		os.Exit(0)
+		os.Exit(1)
+	}
+
+	//Удалим слеш в начале и конце
+	for path_key, path := range config.Local.Project_dirs {
+		config.Local.Project_dirs[path_key] = strings.Trim(path, "/")
+	}
+
+	for path_key, path := range config.Local.Project_files {
+		config.Local.Project_files[path_key] = strings.Trim(path, "/")
 	}
 
 	var prj = ProjectInit(&config)
