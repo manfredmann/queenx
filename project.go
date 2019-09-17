@@ -78,7 +78,7 @@ func (prj *Project) remote_transfer(local_path string, remote_path string) error
 
 func (prj *Project) Init(reinit bool) error {
 	if reinit {
-		fmt.Printf("\033[1;37m -- Removing the directory structure on remote host...\033[0m")
+		fmt.Printf("\033[1;37m -- Removing the directory structure on remote host... ")
 		if prj.remote_check_dir(prj.remote_path) == true {
 			err := prj.remote_remove_dir(prj.remote_path)
 			if err == nil {
@@ -179,8 +179,8 @@ func (prj *Project) Build() error {
 	var cmd *exec.Cmd
 	var err error
 
+	fmt.Println("\033[1;37m -- Prebuild...\033[0m")
 	if len(prj.config.Build.Cmd_pre) != 0 {
-		fmt.Println("\033[1;37m -- Prebuild...\033[0m")
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_pre)
 
 		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
@@ -192,10 +192,12 @@ func (prj *Project) Build() error {
 		if err != nil {
 			return err
 		}
+	} else {
+		fmt.Println("\033[1;37m -- Nothing to do\033[0m")
 	}
 
+	fmt.Println("\033[1;37m -- Build...\033[0m")
 	if len(prj.config.Build.Cmd_build) != 0 {
-		fmt.Println("\033[1;37m -- Build...\033[0m")
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_build)
 
 		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
@@ -207,10 +209,12 @@ func (prj *Project) Build() error {
 		if err != nil {
 			return err
 		}
+	} else {
+		fmt.Println("\033[1;37m -- Nothing to do\033[0m")
 	}
 
+	fmt.Println("\033[1;37m -- Postbuild...\033[0m")
 	if len(prj.config.Build.Cmd_post) != 0 {
-		fmt.Println("\033[1;37m -- Postbuild...\033[0m")
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_post)
 
 		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
@@ -222,6 +226,34 @@ func (prj *Project) Build() error {
 		if err != nil {
 			return err
 		}
+	}
+	fmt.Println("\033[1;37m -- Nothing to do\033[0m")
+
+	return nil
+}
+
+func (prj *Project) Clean() error {
+	var remote_cmd string
+	var cmd *exec.Cmd
+	var err error
+
+	fmt.Println("\033[1;37m -- Clean...\033[0m")
+
+	if len(prj.config.Build.Cmd_clean) != 0 {
+		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_clean)
+
+		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		err = cmd.Run()
+
+		if err != nil {
+			return err
+		}
+
+	} else {
+		fmt.Println("\033[1;37m -- Nothing to do\033[0m")
 	}
 
 	return nil

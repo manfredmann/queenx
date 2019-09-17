@@ -34,6 +34,7 @@ type Configuration struct {
 		Cmd_pre   string `yaml:"cmd_pre"`
 		Cmd_build string `yaml:"cmd_build"`
 		Cmd_post  string `yaml:"cmd_post"`
+		Cmd_clean string `yaml:"cmd_clean"`
 	} `yaml:"build"`
 }
 

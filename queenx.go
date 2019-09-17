@@ -110,6 +110,10 @@ func main() {
 			prj.Init(*reinit_ptr)
 			prj.Build()
 		}
+	case "clean":
+		{
+			prj.Clean()
+		}
 	case "init":
 		{
 			prj.Init(*reinit_ptr)

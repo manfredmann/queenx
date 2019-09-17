@@ -18,8 +18,10 @@ remote:
   projects_path: "/root/projects"
 build:
   # Выполняется перед сборкой
-  cmd_pre: "make clean"
+  cmd_pre: ""
   # Сборка
   cmd_build: "make"
   # Выполняется после сборки
   cmd_post: ""
+  # Очистка
+  cmd_clean: "make clean"
