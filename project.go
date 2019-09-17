@@ -103,7 +103,8 @@ func (prj *Project) Init(reinit bool) error {
 		err := prj.remote_create_dir(prj.remote_path)
 
 		if err != nil {
-			fmt.Printf("Error %v\033[0m", err)
+			fmt.Printf("Error %v\n", err)
+			fmt.Println(" -- May be the project directory doesn't exists\033[0m")
 			return err
 		}
 
