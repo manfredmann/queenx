@@ -14,6 +14,7 @@
 
 ## Требования
 localhost:
+* GNU/Linux
 * Клиент OpenSSH
 * rsync
 
