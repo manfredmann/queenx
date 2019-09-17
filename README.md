@@ -1,3 +1,4 @@
+
 # queenx - Утилита для сборки проектов под QNX4 на target системе.
 
 ## В чём идея
@@ -12,8 +13,12 @@
 // Заранее прошу прощения за мой кривой английский, можете мне в этом помочь (всем как обычно пофиг).
 
 ## Требования
-- Любой GNU/Linux дистрибутив, где есть ssh клиент, и возможность собирать Go приложения
-- Установленный и запущенный OpenSSH на хосте с qnx4
+localhost:
+* Клиент OpenSSH
+* rsync
+
+qnx4:
+* OpenSSH
 
 ## Как пользоваться
 Положить в каталог с  проектом файл конфигурации queenx.yml, пример:
@@ -51,7 +56,7 @@ build:
 
 ```
 ~/q/p/PtSoko > queenx init
- -- Checking the project dirs on remote host...
+ -- Checking the directory structure on remote host...
  -- [/root/projects/PtSoko]: Creating... OK
  -- [/root/projects/PtSoko/src]: Creating... OK
  -- [/root/projects/PtSoko/inc]: Creating... OK
@@ -62,32 +67,57 @@ build:
 Ну и соберём проект
 ```
 ~/q/p/PtSoko > queenx build
+ -- Checking the directory structure on remote host...
+ -- [/root/projects/PtSoko]: OK
+ -- [/root/projects/PtSoko/src]: OK
+ -- [/root/projects/PtSoko/inc]: OK
+ -- [/root/projects/PtSoko/obj]: OK
+ -- [/root/projects/PtSoko/bin]: OK
  -- Transferring files to remote host...
  -- [./src --> /root/projects/PtSoko/src]: 
-box.cpp                                                                                                                                                                                                   100% 2170   579.4KB/s   00:00    
-main.cpp                                                                                                                                                                                                  100% 1029     1.0MB/s   00:00    
-player.cpp                                                                                                                                                                                                100% 1903     2.4MB/s   00:00    
-help.cpp                                                                                                                                                                                                  100%  257   413.7KB/s   00:00    
-game.cpp                                                                                                                                                                                                  100%   21KB   9.6MB/s   00:00    
-brick.cpp                                                                                                                                                                                                 100% 1804     2.1MB/s   00:00    
-object.cpp                                                                                                                                                                                                100%  809     1.1MB/s   00:00    
-box_place.cpp                                                                                                                                                                                             100% 1725     1.8MB/s   00:00    
+sending incremental file list
+src/box.cpp
+src/box_place.cpp
+src/brick.cpp
+src/game.cpp
+src/help.cpp
+src/main.cpp
+src/object.cpp
+src/player.cpp
+
+sent 31,278 bytes  received 169 bytes  62,894.00 bytes/sec
+total size is 30,695  speedup is 0.98
  -- [./inc --> /root/projects/PtSoko/inc]: 
-game.h                                                                                                                                                                                                    100% 3582   575.0KB/s   00:00    
-object.h                                                                                                                                                                                                  100% 1550     1.2MB/s   00:00    
-brick.h                                                                                                                                                                                                   100% 1222     1.5MB/s   00:00    
-player.h                                                                                                                                                                                                  100% 1248     1.8MB/s   00:00    
-help.h                                                                                                                                                                                                    100%  164   224.4KB/s   00:00    
-box.h                                                                                                                                                                                                     100% 1281     1.6MB/s   00:00    
-box_place.h                                                                                                                                                                                               100% 1181     1.3MB/s   00:00    
+sending incremental file list
+inc/box.h
+inc/box_place.h
+inc/brick.h
+inc/game.h
+inc/help.h
+inc/object.h
+inc/player.h
+
+sent 10,723 bytes  received 150 bytes  21,746.00 bytes/sec
+total size is 10,228  speedup is 0.94
  -- [./obj --> /root/projects/PtSoko/obj]: 
-.placeholder                                                                                                                                                                                              100%    0     0.0KB/s   00:00    
+sending incremental file list
+obj/.placeholder
+
+sent 118 bytes  received 36 bytes  102.67 bytes/sec
+total size is 0  speedup is 0.00
  -- [./bin --> /root/projects/PtSoko/bin]: 
-.placeholder                                                                                                                                                                                              100%    0     0.0KB/s   00:00    
+sending incremental file list
+bin/.placeholder
+sent 118 bytes  received 36 bytes  308.00 bytes/sec
+total size is 0  speedup is 0.00
  -- [./Makefile --> /root/projects/PtSoko/Makefile]: 
-Makefile                                                                                                                                                                                                  100%  699   252.2KB/s   00:00    
+sending incremental file list
+Makefile
+
+sent 790 bytes  received 35 bytes  1,650.00 bytes/sec
+total size is 699  speedup is 0.85
  -- Prebuild...
-rm -f ./obj/*.o ./bin/PtSoko ./bin/*.map *.err 
+ -- Nothing to do
  -- Build...
 cc -Oentx -ms -s -w1 -5r, -WC,-xss -I./inc -c -o obj/help.o src/help.cpp
 /usr/watcom/10.6/bin/wpp386 -zq -oentx -w1 -i=./inc -ms -fo=obj/help.o -xss -5r -i=/usr/watcom/10.6/usr/include -i=/usr/include src/help.cpp 
@@ -113,6 +143,8 @@ Warning(1027): file obj/brick.o(/root/projects/PtSoko/src/brick.cpp): redefiniti
 Warning(1027): file obj/player.o(/root/projects/PtSoko/src/player.cpp): redefinition of _PxImageFunc ignored
 Warning(1027): file obj/game.o(/root/projects/PtSoko/src/game.cpp): redefinition of _PxImageFunc ignored
 Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition of _PxImageFunc ignored
+ -- Postbuild...
+ -- Nothing to do
 ```
 
 Можно запустить собранный проект через ssh сессию выполнив
@@ -154,7 +186,6 @@ Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition
 
 #### Очистка
 Выполнение команды очистки (cmd_clean)
-По правде говоря, это не особо имеет смысл, т.к. scp, который используется для передачи файлов, в любом случае перепишет все сорцы, и компилятор их заново соберёт
 ```
 > queenx clean
 ```
