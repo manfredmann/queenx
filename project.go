@@ -28,7 +28,7 @@ import (
 
 type Project struct {
 	config      *Configuration
-	ssh_host    string
+	remote_host string
 	remote_path string
 }
 
@@ -36,15 +36,15 @@ func ProjectInit(config *Configuration) *Project {
 	project := new(Project)
 
 	project.config = config
-	project.ssh_host = fmt.Sprintf("root@%s", config.Remote.Host)
+	project.remote_host = fmt.Sprintf("root@%s", config.Remote.Host)
 	project.remote_path = fmt.Sprintf("%s/%s", config.Remote.Proejcts_path, config.Local.Project_name)
 
 	return project
 }
 
 func (prj *Project) remote_check_dir(path string) bool {
-	ssh_dir := fmt.Sprintf("[ -d \"%s\" ];", path)
-	cmd := exec.Command(bin_ssh, prj.ssh_host, ssh_dir)
+	check_cmd := fmt.Sprintf("[ -d \"%s\" ];", path)
+	cmd := exec.Command(bin_ssh, prj.remote_host, check_cmd)
 
 	err := cmd.Run()
 
@@ -56,7 +56,7 @@ func (prj *Project) remote_check_dir(path string) bool {
 }
 
 func (prj *Project) remote_create_dir(path string) error {
-	cmd := exec.Command(bin_ssh, prj.ssh_host, "mkdir", path)
+	cmd := exec.Command(bin_ssh, prj.remote_host, "mkdir", path)
 
 	return cmd.Run()
 }
@@ -67,9 +67,7 @@ func (prj *Project) remote_transfer(local_path string, remote_path string) error
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	err := cmd.Run()
-
-	return err
+	return cmd.Run()
 }
 
 func (prj *Project) Init() error {
@@ -119,7 +117,7 @@ func (prj *Project) Build() error {
 	for _, path := range prj.config.Local.Project_dirs {
 		fmt.Printf("\033[1;37m -- [./%s --> %s/%s]: ", path, prj.remote_path, path)
 
-		var path_remote = fmt.Sprintf("%s:%s", prj.ssh_host, prj.remote_path)
+		var path_remote = fmt.Sprintf("%s:%s", prj.remote_host, prj.remote_path)
 		var path_local = fmt.Sprintf("./%s", path)
 
 		if _, err := os.Stat(path_local); os.IsNotExist(err) {
@@ -139,7 +137,7 @@ func (prj *Project) Build() error {
 	for _, file := range prj.config.Local.Project_files {
 		fmt.Printf("\033[1;37m -- [./%s --> %s/%s]: ", file, prj.remote_path, file)
 
-		var path_remote = fmt.Sprintf("%s:%s/", prj.ssh_host, prj.remote_path)
+		var path_remote = fmt.Sprintf("%s:%s/", prj.remote_host, prj.remote_path)
 		var path_local = fmt.Sprintf("./%s", file)
 
 		if _, err := os.Stat(path_local); os.IsNotExist(err) {
@@ -164,7 +162,7 @@ func (prj *Project) Build() error {
 		fmt.Println("\033[1;37m -- Prebuild...\033[0m")
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_pre)
 
-		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.ssh_host, remote_cmd)
+		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -179,7 +177,7 @@ func (prj *Project) Build() error {
 		fmt.Println("\033[1;37m -- Build...\033[0m")
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_build)
 
-		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.ssh_host, remote_cmd)
+		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -194,7 +192,7 @@ func (prj *Project) Build() error {
 		fmt.Println("\033[1;37m -- Postbuild...\033[0m")
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_post)
 
-		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.ssh_host, remote_cmd)
+		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -223,7 +221,7 @@ func (prj *Project) Run(args []string, node uint) {
 		prj_cmd = fmt.Sprintf("cd %s/bin && on -n%d ./%s", prj.remote_path, node, prj.config.Local.Project_name)
 	}
 
-	cmd = exec.Command(bin_ssh, "-t", "-t", prj.ssh_host, prj_cmd, args_str)
+	cmd = exec.Command(bin_ssh, "-t", "-t", prj.remote_host, prj_cmd, args_str)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
