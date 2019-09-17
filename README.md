@@ -129,7 +129,8 @@ Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition
 > queenx init 
 ```
 Ключи:
--r - Переинициализировать структуру каталогов (Удаляет при наличии, и создаёт заново)
+
+-r - Переинициализировать структуру каталогов (удаляет при наличии, и создаёт заново)
 
 ---
 
@@ -139,7 +140,8 @@ Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition
 > queenx build
 ```
 Ключи:
--r - Переинициализировать структуру каталогов (Удаляет при наличии, и создаёт заново)
+
+-r - Переинициализировать структуру каталогов (удаляет при наличии, и создаёт заново)
 
 ---
 
@@ -150,4 +152,5 @@ Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition
 > queenx run
 ```
 Ключи:
+
 -n - Запуск приложения на определённой node
