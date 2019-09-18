@@ -21,28 +21,34 @@
 package main
 
 import (
+	"archive/tar"
+	"compress/gzip"
 	"errors"
 	"flag"
 	"fmt"
 	"gopkg.in/yaml.v2"
+	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
 type queenx struct {
-	config     Configuration
-	config_dir string
-	args       []string
-	host       string
-	node       uint
-	reinit     bool
+	config        Configuration
+	config_dir    string
+	templates_dir string
+	args          []string
+	host          string
+	node          uint
+	reinit        bool
 }
 
 func QueenxInit(args []string, host string, node uint, reinit bool) queenx {
 	var qx queenx
 
 	qx.config_dir = fmt.Sprintf("%s/.config/queenx", os.Getenv("HOME"))
+	qx.templates_dir = fmt.Sprintf("%s/templates", qx.config_dir)
 
 	qx.args = args
 	qx.node = node
@@ -118,14 +124,132 @@ func (qx *queenx) load_configuration() error {
 	return nil
 }
 
+func (qx *queenx) TemplateUnpack(template string, prj_name string) error {
+	var gz bool
+	var fname = fmt.Sprintf("%s/%s.tar", qx.templates_dir, template)
+
+	Printf(" -- Trying to open \"%s\"\n", fname)
+
+	file, err := os.Open(fname)
+
+	if err != nil {
+		fname = fmt.Sprintf("%s.gz", fname)
+		Printf(" -- Trying to open \"%s\"\n", fname)
+
+		file, err = os.Open(fname)
+
+		if err != nil {
+			return errors.New(fmt.Sprintf("Couldn't open template file: %v", err))
+		}
+
+		gz = true
+	} else {
+		gz = false
+	}
+
+	var tr *tar.Reader
+	var dst = "./"
+
+	dst = filepath.Join(dst, prj_name)
+
+	err = os.Mkdir(dst, 0755)
+
+	if err != nil {
+		return errors.New(fmt.Sprintf("Couldn't create the project directory: %v", err))
+	}
+
+	if gz {
+		gzr, err := gzip.NewReader(file)
+
+		if err != nil {
+			return errors.New(fmt.Sprintf("Couldn't open template file: %v", err))
+		}
+		defer gzr.Close()
+
+		tr = tar.NewReader(gzr)
+	} else {
+		tr = tar.NewReader(file)
+	}
+
+	for {
+		header, err := tr.Next()
+
+		switch {
+		case err == io.EOF:
+			Println(" -- OK")
+			return nil
+
+		case err != nil:
+			return err
+
+		case header == nil:
+			continue
+		}
+
+		target := filepath.Join(dst, header.Name)
+
+		Printf(" -- [%s]: ", target)
+
+		switch header.Typeflag {
+		case tar.TypeDir:
+			{
+				if _, err := os.Stat(target); err != nil {
+					if err := os.MkdirAll(target, 0755); err != nil {
+						return err
+					}
+				}
+
+				Println("OK")
+
+			}
+		case tar.TypeReg:
+			{
+				f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, os.FileMode(header.Mode))
+				if err != nil {
+					return err
+				}
+
+				if _, err := io.Copy(f, tr); err != nil {
+					return err
+				}
+
+				f.Close()
+
+				Println("OK")
+			}
+		}
+	}
+
+	return nil
+}
+
 func (qx *queenx) Run() error {
+	if is_path_exists(qx.config_dir) == false {
+		err := os.MkdirAll(qx.config_dir, 0755)
+
+		if err != nil {
+			return errors.New(fmt.Sprintf("Couldn't create configuration diretory: %v", err))
+		}
+
+		err = os.Mkdir(qx.templates_dir, 0755)
+
+		if err != nil {
+			return errors.New(fmt.Sprintf("Couldn't create templates diretory: %v", err))
+		}
+	}
+
 	switch qx.args[0] {
 	case "new":
 		{
 			if len(qx.args) < 2 {
-				return errors.New("You must specify template name")
+				return errors.New("You must specify the template name")
 			}
-			//is_path_exists
+
+			if len(qx.args) < 3 {
+				return errors.New("You must specify the project name")
+			}
+
+			return qx.TemplateUnpack(qx.args[1], qx.args[2])
 		}
 	default:
 		{
@@ -202,7 +326,7 @@ func main() {
 	var err = qx.Run()
 
 	if err != nil {
-		Errorf("Error: %v\n", err)
+		Errorf(" -- Error: %v\n", err)
 		os.Exit(1)
 	}
 }
