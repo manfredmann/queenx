@@ -78,7 +78,7 @@ func (prj *Project) remote_transfer(local_path string, remote_path string) error
 
 func (prj *Project) Init(reinit bool) error {
 	if reinit {
-		Printf("-- Removing the directory structure on remote host... ")
+		Printf(" -- Removing the directory structure on remote host... ")
 		if prj.remote_check_dir(prj.remote_path) == true {
 			err := prj.remote_remove_dir(prj.remote_path)
 			if err == nil {
@@ -92,9 +92,9 @@ func (prj *Project) Init(reinit bool) error {
 		}
 	}
 
-	Println("-- Checking the directory structure on remote host...")
+	Println(" -- Checking the directory structure on remote host...")
 
-	Printf("-- [%s]: ", prj.remote_path)
+	Printf(" -- [%s]: ", prj.remote_path)
 
 	if prj.remote_check_dir(prj.remote_path) == true {
 		Println("OK")
@@ -114,7 +114,7 @@ func (prj *Project) Init(reinit bool) error {
 	for _, dir := range prj.config.Local.Project_dirs {
 		var path = fmt.Sprintf("%s/%s", prj.remote_path, dir)
 
-		Printf("-- [%s]: ", path)
+		Printf(" -- [%s]: ", path)
 
 		if prj.remote_check_dir(path) == true {
 			Println("OK")
@@ -134,10 +134,10 @@ func (prj *Project) Init(reinit bool) error {
 }
 
 func (prj *Project) Build() error {
-	Println("-- Transferring files to remote host...")
+	Println(" -- Transferring files to remote host...")
 
 	for _, path := range prj.config.Local.Project_dirs {
-		Printf("-- [./%s --> %s/%s]: ", path, prj.remote_path, path)
+		Printf(" -- [./%s --> %s/%s]: ", path, prj.remote_path, path)
 
 		var path_remote = fmt.Sprintf("%s:%s", prj.remote_host, prj.remote_path)
 		var path_local = fmt.Sprintf("./%s", path)
@@ -157,7 +157,7 @@ func (prj *Project) Build() error {
 	}
 
 	for _, file := range prj.config.Local.Project_files {
-		Printf("-- [./%s --> %s/%s]: ", file, prj.remote_path, file)
+		Printf(" -- [./%s --> %s/%s]: ", file, prj.remote_path, file)
 
 		var path_remote = fmt.Sprintf("%s:%s/", prj.remote_host, prj.remote_path)
 		var path_local = fmt.Sprintf("./%s", file)
@@ -180,7 +180,7 @@ func (prj *Project) Build() error {
 	var cmd *exec.Cmd
 	var err error
 
-	Println("-- Prebuild...")
+	Println(" -- Prebuild...")
 	if len(prj.config.Build.Cmd_pre) != 0 {
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_pre)
 
@@ -194,10 +194,10 @@ func (prj *Project) Build() error {
 			return err
 		}
 	} else {
-		Println("-- Nothing to do")
+		Println(" -- Nothing to do")
 	}
 
-	Println("-- Build...")
+	Println(" -- Build...")
 	if len(prj.config.Build.Cmd_build) != 0 {
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_build)
 
@@ -211,10 +211,10 @@ func (prj *Project) Build() error {
 			return err
 		}
 	} else {
-		Println("-- Nothing to do")
+		Println(" -- Nothing to do")
 	}
 
-	Println("-- Postbuild...")
+	Println(" -- Postbuild...")
 	if len(prj.config.Build.Cmd_post) != 0 {
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_post)
 
@@ -228,7 +228,7 @@ func (prj *Project) Build() error {
 			return err
 		}
 	}
-	Println("-- Nothing to do")
+	Println(" -- Nothing to do")
 
 	return nil
 }
@@ -238,7 +238,7 @@ func (prj *Project) Clean() error {
 	var cmd *exec.Cmd
 	var err error
 
-	Println("-- Clean...")
+	Println(" -- Clean...")
 
 	if len(prj.config.Build.Cmd_clean) != 0 {
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_clean)
@@ -254,7 +254,7 @@ func (prj *Project) Clean() error {
 		}
 
 	} else {
-		Println("-- Nothing to do")
+		Println(" -- Nothing to do")
 	}
 
 	return nil
