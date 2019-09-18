@@ -142,7 +142,7 @@ func (prj *Project) Build() error {
 		var path_remote = fmt.Sprintf("%s:%s", prj.remote_host, prj.remote_path)
 		var path_local = fmt.Sprintf("./%s", path)
 
-		if _, err := os.Stat(path_local); os.IsNotExist(err) {
+		if is_path_exists(path_local) == false {
 			Warningln("Skip")
 			continue
 		}
@@ -162,7 +162,7 @@ func (prj *Project) Build() error {
 		var path_remote = fmt.Sprintf("%s:%s/", prj.remote_host, prj.remote_path)
 		var path_local = fmt.Sprintf("./%s", file)
 
-		if _, err := os.Stat(path_local); os.IsNotExist(err) {
+		if is_path_exists(path_local) == false {
 			Warningln("Skip")
 			continue
 		}
