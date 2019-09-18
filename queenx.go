@@ -51,7 +51,7 @@ func main() {
 	config, err := load_configuration()
 
 	if err != nil {
-		fmt.Printf("Couldn't open the project configuration file: %v\n", err)
+		Errorf("Couldn't open the project configuration file: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -90,22 +90,22 @@ func main() {
 	config.Build.Cmd_pre = strings.TrimSpace(config.Build.Cmd_pre)
 
 	if len(config.Local.Project_name) == 0 {
-		fmt.Println("You must specify the project name")
+		Errorf("You must specify the project name")
 		os.Exit(1)
 	}
 
 	if len(config.Local.Project_dirs) == 0 && len(config.Local.Project_files) == 0 {
-		fmt.Println("You must specify the project dirs or/and files")
+		Errorf("You must specify the project dirs or/and files")
 		os.Exit(1)
 	}
 
 	if len(config.Remote.Proejcts_path) == 0 {
-		fmt.Println("You must specify the remote projects path")
+		Errorf("You must specify the remote projects path")
 		os.Exit(1)
 	}
 
 	if len(config.Remote.Host) == 0 {
-		fmt.Println("You must specify the remote host")
+		Errorf("You must specify the remote host")
 		os.Exit(1)
 	}
 
@@ -126,7 +126,7 @@ func main() {
 			err = prj.Init(*reinit_ptr)
 
 			if err != nil {
-				fmt.Printf("Error: %v\n", err)
+				Errorf("Error: %v\n", err)
 				os.Exit(1)
 			}
 
@@ -147,7 +147,7 @@ func main() {
 	}
 
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		Errorf("Error: %v\n", err)
 		os.Exit(1)
 	}
 }
