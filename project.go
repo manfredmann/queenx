@@ -137,10 +137,10 @@ func (prj *Project) Build() error {
 	Println(" -- Transferring files to remote host...")
 
 	for _, path := range prj.config.Local.Project_dirs {
-		Printf(" -- [./%s --> %s/%s]: ", path, prj.remote_path, path)
+		Printf(" -- [%s --> %s/%s]: ", path, prj.remote_path, path)
 
 		var path_remote = fmt.Sprintf("%s:%s", prj.remote_host, prj.remote_path)
-		var path_local = fmt.Sprintf("./%s", path)
+		var path_local = path
 
 		if is_path_exists(path_local) == false {
 			Warningln("Skip")
@@ -157,10 +157,10 @@ func (prj *Project) Build() error {
 	}
 
 	for _, file := range prj.config.Local.Project_files {
-		Printf(" -- [./%s --> %s/%s]: ", file, prj.remote_path, file)
+		Printf(" -- [%s --> %s/%s]: ", file, prj.remote_path, file)
 
 		var path_remote = fmt.Sprintf("%s:%s/", prj.remote_host, prj.remote_path)
-		var path_local = fmt.Sprintf("./%s", file)
+		var path_local = file
 
 		if is_path_exists(path_local) == false {
 			Warningln("Skip")
