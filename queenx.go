@@ -301,7 +301,7 @@ func main() {
 	flag.Usage = func() {
 		fmt.Printf("Usage: %s [-h hostname] action\n\n", os.Args[0])
 		fmt.Println("  action")
-		fmt.Println("    new <name>  - Create project from template")
+		fmt.Println("    new <name>  - Create the project from template")
 		fmt.Println("    init        - Init the directory structure")
 		fmt.Println("    build       - Build the project")
 		fmt.Println("    clean       - Clean the project")
