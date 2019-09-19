@@ -26,10 +26,10 @@ localhost:
 * rsync
 
 qnx4:
-* Сервер OpenSSH
+* Сервер OpenSSH (также нужен prngd, т.к. 4ка не имеет генератора псевдослучайных числе)
 * rsync
 
-Взять можно тут: https://stuff.pentium02.org/qnx4/
+Взять можно тут: https://stuff.pentium02.org/qnx4/ (prngd и rsync были добыты тут: http://forum.kpda.ru/)
 
 ## Как пользоваться
 Положить в каталог с  проектом файл конфигурации queenx.yml, пример:
