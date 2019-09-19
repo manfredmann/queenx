@@ -52,6 +52,7 @@ func QueenxInit(args []string, host string, node uint, reinit bool) queenx {
 	qx.args = args
 	qx.node = node
 	qx.reinit = reinit
+	qx.host = host
 
 	return qx
 }
