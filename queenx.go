@@ -47,8 +47,8 @@ type queenx struct {
 func QueenxInit(args []string, host string, node uint, reinit bool) queenx {
 	var qx queenx
 
-	qx.config_dir = fmt.Sprintf("%s/.config/queenx", os.Getenv("HOME"))
-	qx.templates_dir = fmt.Sprintf("%s/templates", qx.config_dir)
+	qx.config_dir = filepath.Join(os.Getenv("HOME"), ".config", "queenx")
+	qx.templates_dir = filepath.Join(qx.config_dir, "templates")
 
 	qx.args = args
 	qx.node = node
@@ -126,7 +126,7 @@ func (qx *queenx) load_configuration() error {
 
 func (qx *queenx) TemplateUnpack(template string, prj_name string) error {
 	var gz bool
-	var fname = fmt.Sprintf("%s/%s.tar", qx.templates_dir, template)
+	var fname = filepath.Join(qx.templates_dir, fmt.Sprintf("%s.tar", template))
 
 	Printf(" -- Trying to open \"%s\"\n", fname)
 
@@ -299,13 +299,13 @@ func (qx *queenx) Run() error {
 
 func main() {
 	flag.Usage = func() {
-		fmt.Printf("Usage: %s [-h hostname] action\n\n", os.Args[0])
+		fmt.Printf("Usage: %s [-h hostname] [-n node] [-r] action\n\n", os.Args[0])
 		fmt.Println("  action")
 		fmt.Println("    new <name>  - Create the project from template")
 		fmt.Println("    init        - Init the directory structure")
 		fmt.Println("    build       - Build the project")
 		fmt.Println("    clean       - Clean the project")
-		fmt.Println("    run         - Run the app")
+		fmt.Println("    run <args   - Run the app")
 		fmt.Println("")
 		flag.PrintDefaults()
 	}
