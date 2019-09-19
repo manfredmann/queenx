@@ -25,3 +25,9 @@ build:
   cmd_post: ""
   # Очистка
   cmd_clean: "make clean"
+# Параметры для команды run
+run:
+  # Каталог с бинарником
+  bin_path: "bin"
+  # Имя бинарника
+  bin_name: "pname"

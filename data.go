@@ -20,7 +20,7 @@
 
 package main
 
-type Configuration struct {
+type ProjectConfiguration struct {
 	Local struct {
 		Project_name  string   `yaml:"project_name"`
 		Project_dirs  []string `yaml:"project_dirs"`
@@ -36,6 +36,10 @@ type Configuration struct {
 		Cmd_post  string `yaml:"cmd_post"`
 		Cmd_clean string `yaml:"cmd_clean"`
 	} `yaml:"build"`
+	Run struct {
+		Bin_path string `yaml:"bin_path"`
+		Bin_name string `yaml:"bin_name"`
+	} `yaml:"run"`
 }
 
 var bin_ssh = "ssh"

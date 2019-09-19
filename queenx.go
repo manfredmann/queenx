@@ -34,7 +34,7 @@ import (
 )
 
 type queenx struct {
-	config        Configuration
+	config        ProjectConfiguration
 	config_dir    string
 	templates_dir string
 	args          []string
