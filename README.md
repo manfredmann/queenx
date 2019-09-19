@@ -26,7 +26,7 @@ localhost:
 * rsync
 
 qnx4:
-* Сервер OpenSSH (также нужен prngd, т.к. 4ка не имеет генератора псевдослучайных числе)
+* Сервер OpenSSH (также нужен prngd, т.к. 4ка не имеет генератора псевдослучайных чисел)
 * rsync
 
 Взять можно тут: https://stuff.pentium02.org/qnx4/ (prngd и rsync были добыты тут: http://forum.kpda.ru/)
