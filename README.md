@@ -27,6 +27,9 @@ localhost:
 
 qnx4:
 * Сервер OpenSSH
+* rsync
+
+Взять можно тут: https://stuff.pentium02.org/qnx4/
 
 ## Как пользоваться
 Положить в каталог с  проектом файл конфигурации queenx.yml, пример:
