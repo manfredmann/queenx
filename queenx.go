@@ -123,7 +123,7 @@ func (qx *queenx) load_configuration() error {
 	return nil
 }
 
-func (qx *queenx) TemplateUnpack(template string, prj_name string) error {
+func (qx *queenx) template_unpack(template string, prj_name string) error {
 	var gz bool
 	var fname = filepath.Join(qx.templates_dir, fmt.Sprintf("%s.tar", template))
 
@@ -248,7 +248,7 @@ func (qx *queenx) Run() error {
 				return errors.New("You must specify the project name")
 			}
 
-			return qx.TemplateUnpack(qx.args[1], qx.args[2])
+			return qx.template_unpack(qx.args[1], qx.args[2])
 		}
 	default:
 		{
