@@ -206,29 +206,75 @@ tools:
 
 Пример:
 ```
-> queenx new main test
- -- Trying to open "/home/manfredmann/.config/queenx/templates/main.tar"
- -- [test/bin]: OK
- -- [test/bin/.placeholder]: OK
- -- [test/inc]: OK
- -- [test/inc/.placeholder]: OK
- -- [test/Makefile]: OK
- -- [test/obj]: OK
- -- [test/obj/.placeholder]: OK
- -- [test/queenx.yml]: OK
- -- [test/src]: OK
- -- [test/src/.placeholder]: OK
- -- OK
-> ls test
+~/tmp > queenx new main test
+ ==> Trying to open "/home/manfredmann/.config/queenx/templates/main.tar"
+ ==> [test/bin]: OK
+ ==> [test/bin/.placeholder]: OK
+ ==> [test/inc]: OK
+ ==> [test/inc/.placeholder]: OK
+ ==> [test/Makefile]: OK
+ ==> [test/obj]: OK
+ ==> [test/obj/.placeholder]: OK
+ ==> [test/queenx.yml]: OK
+ ==> [test/src]: OK
+ ==> [test/src/main.cpp]: OK
+ ==> [test/src/.placeholder]: OK
+ ==> OK
+~/tmp > cd test
+~/t/test > ls
 итого 32K
-drwxr-xr-x 6 manfredmann manfredmann 4,0K сен 19 02:03 .
-drwxr-xr-x 3 manfredmann manfredmann 4,0K сен 19 02:03 ..
-drwxr-xr-x 2 manfredmann manfredmann 4,0K сен 19 02:03 bin
-drwxr-xr-x 2 manfredmann manfredmann 4,0K сен 19 02:03 inc
-drwxr-xr-x 2 manfredmann manfredmann 4,0K сен 19 02:03 obj
-drwxr-xr-x 2 manfredmann manfredmann 4,0K сен 19 02:03 src
--rw-r--r-- 1 manfredmann manfredmann  552 сен 19 02:03 Makefile
--rw-r--r-- 1 manfredmann manfredmann  261 сен 19 02:03 queenx.yml
+drwxr-xr-x 6 manfredmann manfredmann 4,0K сен 20 19:38 .
+drwxr-xr-x 6 manfredmann manfredmann 4,0K сен 20 19:38 ..
+drwxr-xr-x 2 manfredmann manfredmann 4,0K сен 20 19:38 bin
+drwxr-xr-x 2 manfredmann manfredmann 4,0K сен 20 19:38 inc
+drwxr-xr-x 2 manfredmann manfredmann 4,0K сен 20 19:38 obj
+drwxr-xr-x 2 manfredmann manfredmann 4,0K сен 20 19:38 src
+-rw-r--r-- 1 manfredmann manfredmann  554 сен 20 19:38 Makefile
+-rw-r--r-- 1 manfredmann manfredmann  302 сен 20 19:38 queenx.yml
+~/t/test > queenx build
+ ==> Checking the directory structure on remote host...
+ ==> [/root/projects/main]: Creating... OK
+ ==> [/root/projects/main/src]: Creating... OK
+ ==> [/root/projects/main/inc]: Creating... OK
+ ==> [/root/projects/main/obj]: Creating... OK
+ ==> [/root/projects/main/bin]: Creating... OK
+ ==> Transferring files to remote host...
+ ==> [src --> /root/projects/main/src]: 
+sending incremental file list
+src/.placeholder
+              0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=1/3)
+src/main.cpp
+             75 100%    0.00kB/s    0:00:00 (xfr#2, to-chk=0/3)
+ ==> [inc --> /root/projects/main/inc]: 
+sending incremental file list
+inc/.placeholder
+              0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+ ==> [obj --> /root/projects/main/obj]: 
+sending incremental file list
+obj/.placeholder
+              0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+ ==> [bin --> /root/projects/main/bin]: 
+sending incremental file list
+bin/.placeholder
+              0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
+ ==> [Makefile --> /root/projects/main/Makefile]: 
+sending incremental file list
+Makefile
+            554 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/1)
+ ==> Prebuild...
+ ==> Nothing to do
+ ==> Build...
+cc -Oentx -ms -s -w1 -5r, -WC,-xss -I./inc -c -o obj/main.o src/main.cpp
+/usr/watcom/10.6/bin/wpp386 -zq -oentx -w1 -i=./inc -ms -fo=obj/main.o -xss -5r -i=/usr/watcom/10.6/usr/include -i=/usr/include src/main.cpp 
+cc -M -N 64k  -o bin/main obj/main.o
+/usr/watcom/10.6/bin/wlink op quiet form qnx flat na bin/main op static op map=bin/main.map op priv=3 op c libp /usr/watcom/10.6/usr/lib:/usr/lib:. f obj/main.o op offset=72k op st=64k  
+ ==> Postbuild...
+ ==> Nothing to do
+~/t/test > queenx run
+ ==> Binary path: /root/projects/main/bin
+ ==> Binary name: main
+Hello, world!
+Connection to 192.168.1.45 closed.
 ```
 
 ## Список команд
