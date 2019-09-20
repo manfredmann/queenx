@@ -34,7 +34,8 @@ import (
 )
 
 type queenx struct {
-	config        ProjectConfiguration
+	config_prj    ProjectConfiguration
+	config_qx     QueenxConfiguration
 	config_dir    string
 	templates_dir string
 	args          []string
@@ -57,14 +58,14 @@ func QueenxInit(args []string, host string, node uint, reinit bool) queenx {
 	return qx
 }
 
-func (qx *queenx) load_configuration_file(fname string) error {
+func (qx *queenx) load_configuration_file(fname string, config interface{}) error {
 	source, err := ioutil.ReadFile(fname)
 
 	if err != nil {
 		return err
 	}
 
-	err = yaml.Unmarshal([]byte(source), &qx.config)
+	err = yaml.Unmarshal([]byte(source), config)
 
 	if err != nil {
 		return err
@@ -76,49 +77,49 @@ func (qx *queenx) load_configuration_file(fname string) error {
 func (qx *queenx) load_configuration() error {
 	var err error
 
-	err = qx.load_configuration_file("queenx.yml")
+	err = qx.load_configuration_file("queenx.yml", &qx.config_prj)
 
 	if err != nil {
 		return errors.New(fmt.Sprintf("Couldn't open the project configuration file: %v", err))
 	}
 
 	if len(qx.host) != 0 {
-		qx.config.Remote.Host = qx.host
+		qx.config_prj.Remote.Host = qx.host
 	}
 
-	qx.config.Local.Project_name = strings.TrimSpace(qx.config.Local.Project_name)
+	qx.config_prj.Local.Project_name = strings.TrimSpace(qx.config_prj.Local.Project_name)
 
-	qx.config.Remote.Proejcts_path = strings.TrimSpace(qx.config.Remote.Proejcts_path)
-	qx.config.Remote.Host = strings.TrimSpace(qx.config.Remote.Host)
+	qx.config_prj.Remote.Proejcts_path = strings.TrimSpace(qx.config_prj.Remote.Proejcts_path)
+	qx.config_prj.Remote.Host = strings.TrimSpace(qx.config_prj.Remote.Host)
 
-	qx.config.Build.Cmd_build = strings.TrimSpace(qx.config.Build.Cmd_build)
-	qx.config.Build.Cmd_clean = strings.TrimSpace(qx.config.Build.Cmd_clean)
-	qx.config.Build.Cmd_post = strings.TrimSpace(qx.config.Build.Cmd_post)
-	qx.config.Build.Cmd_pre = strings.TrimSpace(qx.config.Build.Cmd_pre)
+	qx.config_prj.Build.Cmd_build = strings.TrimSpace(qx.config_prj.Build.Cmd_build)
+	qx.config_prj.Build.Cmd_clean = strings.TrimSpace(qx.config_prj.Build.Cmd_clean)
+	qx.config_prj.Build.Cmd_post = strings.TrimSpace(qx.config_prj.Build.Cmd_post)
+	qx.config_prj.Build.Cmd_pre = strings.TrimSpace(qx.config_prj.Build.Cmd_pre)
 
-	if len(qx.config.Local.Project_name) == 0 {
+	if len(qx.config_prj.Local.Project_name) == 0 {
 		return errors.New("You must specify the project name")
 	}
 
-	if len(qx.config.Local.Project_dirs) == 0 && len(qx.config.Local.Project_files) == 0 {
+	if len(qx.config_prj.Local.Project_dirs) == 0 && len(qx.config_prj.Local.Project_files) == 0 {
 		return errors.New("You must specify the project dirs or/and files")
 	}
 
-	if len(qx.config.Remote.Proejcts_path) == 0 {
+	if len(qx.config_prj.Remote.Proejcts_path) == 0 {
 		return errors.New("You must specify the remote projects path")
 	}
 
-	if len(qx.config.Remote.Host) == 0 {
+	if len(qx.config_prj.Remote.Host) == 0 {
 		return errors.New("You must specify the remote host")
 	}
 
 	//Удалим слеш в начале и конце
-	for path_key, path := range qx.config.Local.Project_dirs {
-		qx.config.Local.Project_dirs[path_key] = strings.Trim(path, "/")
+	for path_key, path := range qx.config_prj.Local.Project_dirs {
+		qx.config_prj.Local.Project_dirs[path_key] = strings.Trim(path, "/")
 	}
 
-	for path_key, path := range qx.config.Local.Project_files {
-		qx.config.Local.Project_files[path_key] = strings.Trim(path, "/")
+	for path_key, path := range qx.config_prj.Local.Project_files {
+		qx.config_prj.Local.Project_files[path_key] = strings.Trim(path, "/")
 	}
 
 	return nil
@@ -238,6 +239,38 @@ func (qx *queenx) Run() error {
 		}
 	}
 
+	var config_qx_path = filepath.Join(qx.config_dir, "config.yml")
+
+	if is_path_exists(config_qx_path) == false {
+		qx.config_qx.Tools.Rsync_options = append(qx.config_qx.Tools.Rsync_options, "-ru")
+		qx.config_qx.Tools.Rsync_options = append(qx.config_qx.Tools.Rsync_options, "-P")
+
+		qx.config_qx.Tools.SSH_Build_options = append(qx.config_qx.Tools.SSH_Build_options, "-t")
+		qx.config_qx.Tools.SSH_Build_options = append(qx.config_qx.Tools.SSH_Build_options, "-o LogLevel=QUIET")
+
+		qx.config_qx.Tools.SSH_Run_options = append(qx.config_qx.Tools.SSH_Run_options, "-t")
+		qx.config_qx.Tools.SSH_Run_options = append(qx.config_qx.Tools.SSH_Run_options, "-t")
+
+		config_raw, err := yaml.Marshal(&qx.config_qx)
+
+		if err != nil {
+			return errors.New(fmt.Sprintf("Coudln't create default config file: %v", err))
+		}
+
+		err = ioutil.WriteFile(config_qx_path, config_raw, 0644)
+
+		if err != nil {
+			return errors.New(fmt.Sprintf("Coudln't create default config file: %v", err))
+		}
+
+	}
+
+	err := qx.load_configuration_file(config_qx_path, &qx.config_qx)
+
+	if err != nil {
+		return errors.New(fmt.Sprintf("Couldn't open queenx configuration file: %v", err))
+	}
+
 	switch qx.args[0] {
 	case "new":
 		{
@@ -261,7 +294,7 @@ func (qx *queenx) Run() error {
 				return err
 			}
 
-			var prj = ProjectInit(&qx.config)
+			var prj = ProjectInit(&qx.config_prj, &qx.config_qx)
 
 			switch qx.args[0] {
 			case "build":

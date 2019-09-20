@@ -29,14 +29,16 @@ import (
 
 type Project struct {
 	config      *ProjectConfiguration
+	config_qx   *QueenxConfiguration
 	remote_host string
 	remote_path string
 }
 
-func ProjectInit(config *ProjectConfiguration) *Project {
+func ProjectInit(config *ProjectConfiguration, config_qx *QueenxConfiguration) *Project {
 	project := new(Project)
 
 	project.config = config
+	project.config_qx = config_qx
 	project.remote_host = fmt.Sprintf("root@%s", config.Remote.Host)
 	project.remote_path = filepath.Join(config.Remote.Proejcts_path, config.Local.Project_name)
 
@@ -69,7 +71,12 @@ func (prj *Project) remote_remove_dir(path string) error {
 }
 
 func (prj *Project) remote_transfer(local_path string, remote_path string) error {
-	cmd := exec.Command(bin_rsync, "-ru", "-P", local_path, remote_path)
+	var rsync_args = prj.config_qx.Tools.Rsync_options
+
+	rsync_args = append(rsync_args, local_path)
+	rsync_args = append(rsync_args, remote_path)
+
+	cmd := exec.Command(bin_rsync, rsync_args...)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -183,9 +190,13 @@ func (prj *Project) Build() error {
 
 	Println(" -- Prebuild...")
 	if len(prj.config.Build.Cmd_pre) != 0 {
-		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_pre)
+		remote_cmd = fmt.Sprintf("cd \"%s\" && %s", prj.remote_path, prj.config.Build.Cmd_pre)
 
-		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
+		var ssh_args = prj.config_qx.Tools.SSH_Build_options
+		ssh_args = append(ssh_args, prj.remote_host)
+		ssh_args = append(ssh_args, remote_cmd)
+
+		cmd = exec.Command(bin_ssh, ssh_args...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -200,9 +211,13 @@ func (prj *Project) Build() error {
 
 	Println(" -- Build...")
 	if len(prj.config.Build.Cmd_build) != 0 {
-		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_build)
+		remote_cmd = fmt.Sprintf("cd \"%s\" && %s", prj.remote_path, prj.config.Build.Cmd_build)
 
-		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
+		var ssh_args = prj.config_qx.Tools.SSH_Build_options
+		ssh_args = append(ssh_args, prj.remote_host)
+		ssh_args = append(ssh_args, remote_cmd)
+
+		cmd = exec.Command(bin_ssh, ssh_args...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -217,9 +232,13 @@ func (prj *Project) Build() error {
 
 	Println(" -- Postbuild...")
 	if len(prj.config.Build.Cmd_post) != 0 {
-		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_post)
+		remote_cmd = fmt.Sprintf("cd \"%s\" && %s", prj.remote_path, prj.config.Build.Cmd_post)
 
-		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
+		var ssh_args = prj.config_qx.Tools.SSH_Build_options
+		ssh_args = append(ssh_args, prj.remote_host)
+		ssh_args = append(ssh_args, remote_cmd)
+
+		cmd = exec.Command(bin_ssh, ssh_args...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -244,7 +263,11 @@ func (prj *Project) Clean() error {
 	if len(prj.config.Build.Cmd_clean) != 0 {
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_clean)
 
-		cmd = exec.Command(bin_ssh, "-t", "-o LogLevel=QUIET", prj.remote_host, remote_cmd)
+		var ssh_args = prj.config_qx.Tools.SSH_Build_options
+		ssh_args = append(ssh_args, prj.remote_host)
+		ssh_args = append(ssh_args, remote_cmd)
+
+		cmd = exec.Command(bin_ssh, ssh_args...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
@@ -264,7 +287,6 @@ func (prj *Project) Clean() error {
 func (prj *Project) Run(args []string, node uint) {
 	var prj_cmd string
 	var cmd *exec.Cmd
-	var args_str string
 
 	var bin_path string
 	var bin_name string
@@ -283,17 +305,21 @@ func (prj *Project) Run(args []string, node uint) {
 	Printf(" -- Binary path: %s\n", bin_path)
 	Printf(" -- Binary name: %s\n", bin_name)
 
-	for _, arg := range args {
-		args_str += fmt.Sprintf("\"%s\" ", arg)
-	}
-
 	if node == 0 {
-		prj_cmd = fmt.Sprintf("cd %s && ./%s", bin_path, prj.config.Local.Project_name)
+		prj_cmd = fmt.Sprintf("cd \"%s\" && \"./%s\"", bin_path, prj.config.Local.Project_name)
 	} else {
-		prj_cmd = fmt.Sprintf("cd %s && on -n%d ./%s", bin_path, node, prj.config.Local.Project_name)
+		prj_cmd = fmt.Sprintf("cd \"%s\" && on -n%d \"./%s\"", bin_path, node, prj.config.Local.Project_name)
 	}
 
-	cmd = exec.Command(bin_ssh, "-t", "-t", prj.remote_host, prj_cmd, args_str)
+	var ssh_args = prj.config_qx.Tools.SSH_Run_options
+
+	ssh_args = append(ssh_args, prj.remote_host)
+	ssh_args = append(ssh_args, prj_cmd)
+	ssh_args = append(ssh_args, args...)
+
+	fmt.Println(ssh_args)
+
+	cmd = exec.Command(bin_ssh, ssh_args...)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

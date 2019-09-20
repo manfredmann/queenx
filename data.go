@@ -42,5 +42,13 @@ type ProjectConfiguration struct {
 	} `yaml:"run"`
 }
 
+type QueenxConfiguration struct {
+	Tools struct {
+		Rsync_options     []string `yaml:"rsync_options"`
+		SSH_Build_options []string `yaml:"ssh_build_options"`
+		SSH_Run_options   []string `yaml:"ssh_run_options"`
+	} `yaml:"tools"`
+}
+
 var bin_ssh = "ssh"
 var bin_rsync = "rsync"
