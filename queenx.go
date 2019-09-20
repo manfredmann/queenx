@@ -242,14 +242,14 @@ func (qx *queenx) Run() error {
 	var config_qx_path = filepath.Join(qx.config_dir, "config.yml")
 
 	if is_path_exists(config_qx_path) == false {
-		qx.config_qx.Tools.Rsync_options = append(qx.config_qx.Tools.Rsync_options, "-ru")
-		qx.config_qx.Tools.Rsync_options = append(qx.config_qx.Tools.Rsync_options, "-P")
+		qx.config_qx.Tools.Rsync_args = append(qx.config_qx.Tools.Rsync_args, "-ru")
+		qx.config_qx.Tools.Rsync_args = append(qx.config_qx.Tools.Rsync_args, "-P")
 
-		qx.config_qx.Tools.SSH_Build_options = append(qx.config_qx.Tools.SSH_Build_options, "-t")
-		qx.config_qx.Tools.SSH_Build_options = append(qx.config_qx.Tools.SSH_Build_options, "-o LogLevel=QUIET")
+		qx.config_qx.Tools.SSH_Build_args = append(qx.config_qx.Tools.SSH_Build_args, "-t")
+		qx.config_qx.Tools.SSH_Build_args = append(qx.config_qx.Tools.SSH_Build_args, "-o LogLevel=QUIET")
 
-		qx.config_qx.Tools.SSH_Run_options = append(qx.config_qx.Tools.SSH_Run_options, "-t")
-		qx.config_qx.Tools.SSH_Run_options = append(qx.config_qx.Tools.SSH_Run_options, "-t")
+		qx.config_qx.Tools.SSH_Run_args = append(qx.config_qx.Tools.SSH_Run_args, "-t")
+		qx.config_qx.Tools.SSH_Run_args = append(qx.config_qx.Tools.SSH_Run_args, "-t")
 
 		config_raw, err := yaml.Marshal(&qx.config_qx)
 

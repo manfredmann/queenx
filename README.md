@@ -179,16 +179,16 @@ Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition
 При первом запуске автоматически создаётся файл конфигурации ~/.config/queenx/config.yml
 ```yml
 tools:
-  # Опции rsync
-  rsync_options:
+  # Аргументы rsync
+  rsync_args:
   - -ru
   - -P
-  # Опции ssh для команд build и clean
-  ssh_build_options:
+  # Аргументы ssh для команд build и clean
+  ssh_build_args:
   - -t
   - -o LogLevel=QUIET
-  # Опции ssh для команды run
-  ssh_run_options:
+  # Аргументы ssh для команды run
+  ssh_run_args:
   - -t
   - -t
 ```

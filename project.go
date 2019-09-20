@@ -71,7 +71,7 @@ func (prj *Project) remote_remove_dir(path string) error {
 }
 
 func (prj *Project) remote_transfer(local_path string, remote_path string) error {
-	var rsync_args = prj.config_qx.Tools.Rsync_options
+	var rsync_args = prj.config_qx.Tools.Rsync_args
 
 	rsync_args = append(rsync_args, local_path)
 	rsync_args = append(rsync_args, remote_path)
@@ -192,7 +192,7 @@ func (prj *Project) Build() error {
 	if len(prj.config.Build.Cmd_pre) != 0 {
 		remote_cmd = fmt.Sprintf("cd \"%s\" && %s", prj.remote_path, prj.config.Build.Cmd_pre)
 
-		var ssh_args = prj.config_qx.Tools.SSH_Build_options
+		var ssh_args = prj.config_qx.Tools.SSH_Build_args
 		ssh_args = append(ssh_args, prj.remote_host)
 		ssh_args = append(ssh_args, remote_cmd)
 
@@ -213,7 +213,7 @@ func (prj *Project) Build() error {
 	if len(prj.config.Build.Cmd_build) != 0 {
 		remote_cmd = fmt.Sprintf("cd \"%s\" && %s", prj.remote_path, prj.config.Build.Cmd_build)
 
-		var ssh_args = prj.config_qx.Tools.SSH_Build_options
+		var ssh_args = prj.config_qx.Tools.SSH_Build_args
 		ssh_args = append(ssh_args, prj.remote_host)
 		ssh_args = append(ssh_args, remote_cmd)
 
@@ -234,7 +234,7 @@ func (prj *Project) Build() error {
 	if len(prj.config.Build.Cmd_post) != 0 {
 		remote_cmd = fmt.Sprintf("cd \"%s\" && %s", prj.remote_path, prj.config.Build.Cmd_post)
 
-		var ssh_args = prj.config_qx.Tools.SSH_Build_options
+		var ssh_args = prj.config_qx.Tools.SSH_Build_args
 		ssh_args = append(ssh_args, prj.remote_host)
 		ssh_args = append(ssh_args, remote_cmd)
 
@@ -263,7 +263,7 @@ func (prj *Project) Clean() error {
 	if len(prj.config.Build.Cmd_clean) != 0 {
 		remote_cmd = fmt.Sprintf("cd %s && %s", prj.remote_path, prj.config.Build.Cmd_clean)
 
-		var ssh_args = prj.config_qx.Tools.SSH_Build_options
+		var ssh_args = prj.config_qx.Tools.SSH_Build_args
 		ssh_args = append(ssh_args, prj.remote_host)
 		ssh_args = append(ssh_args, remote_cmd)
 
@@ -311,7 +311,7 @@ func (prj *Project) Run(args []string, node uint) {
 		prj_cmd = fmt.Sprintf("cd \"%s\" && on -n%d \"./%s\"", bin_path, node, prj.config.Local.Project_name)
 	}
 
-	var ssh_args = prj.config_qx.Tools.SSH_Run_options
+	var ssh_args = prj.config_qx.Tools.SSH_Run_args
 
 	ssh_args = append(ssh_args, prj.remote_host)
 	ssh_args = append(ssh_args, prj_cmd)
