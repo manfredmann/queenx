@@ -271,6 +271,18 @@ func (qx *queenx) Run() error {
 		return errors.New(fmt.Sprintf("Couldn't open queenx configuration file: %v", err))
 	}
 
+	for arg_key, arg := range qx.config_qx.Tools.Rsync_args {
+		qx.config_qx.Tools.Rsync_args[arg_key] = strings.TrimSpace(arg)
+	}
+
+	for arg_key, arg := range qx.config_qx.Tools.SSH_Build_args {
+		qx.config_qx.Tools.SSH_Build_args[arg_key] = strings.TrimSpace(arg)
+	}
+
+	for arg_key, arg := range qx.config_qx.Tools.SSH_Run_args {
+		qx.config_qx.Tools.SSH_Run_args[arg_key] = strings.TrimSpace(arg)
+	}
+
 	switch qx.args[0] {
 	case "new":
 		{
