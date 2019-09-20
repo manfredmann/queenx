@@ -129,13 +129,13 @@ func (qx *queenx) template_unpack(template string, prj_name string) error {
 	var gz bool
 	var fname = filepath.Join(qx.templates_dir, fmt.Sprintf("%s.tar", template))
 
-	Printf(" -- Trying to open \"%s\"\n", fname)
+	log.Printf("Trying to open \"%s\"\n", fname)
 
 	file, err := os.Open(fname)
 
 	if err != nil {
 		fname = fmt.Sprintf("%s.gz", fname)
-		Printf(" -- Trying to open \"%s\"\n", fname)
+		log.Printf("Trying to open \"%s\"\n", fname)
 
 		file, err = os.Open(fname)
 
@@ -177,7 +177,7 @@ func (qx *queenx) template_unpack(template string, prj_name string) error {
 
 		switch {
 		case err == io.EOF:
-			Println(" -- OK")
+			log.Println("OK")
 			return nil
 
 		case err != nil:
@@ -189,7 +189,7 @@ func (qx *queenx) template_unpack(template string, prj_name string) error {
 
 		target := filepath.Join(dst, header.Name)
 
-		Printf(" -- [%s]: ", target)
+		log.Printf("[%s]: ", target)
 
 		switch header.Typeflag {
 		case tar.TypeDir:
@@ -200,7 +200,7 @@ func (qx *queenx) template_unpack(template string, prj_name string) error {
 					}
 				}
 
-				Println("OK")
+				log.Println("OK")
 
 			}
 		case tar.TypeReg:
@@ -216,7 +216,7 @@ func (qx *queenx) template_unpack(template string, prj_name string) error {
 
 				f.Close()
 
-				Println("OK")
+				log.Println("OK")
 			}
 		}
 	}

@@ -26,6 +26,8 @@ import (
 	"os"
 )
 
+var log = LoggerInit(" ==> ", Color_GREENL)
+
 func main() {
 	flag.Usage = func() {
 		fmt.Printf("Usage: %s [-h hostname] [-n node] [-r] action\n\n", os.Args[0])
@@ -55,7 +57,7 @@ func main() {
 	var err = qx.Run()
 
 	if err != nil {
-		Errorf(" -- Error: %v\n", err)
+		log.Errorf("Error: %v\n", err)
 		os.Exit(1)
 	}
 }

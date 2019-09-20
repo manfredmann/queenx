@@ -72,25 +72,25 @@ run:
 
 ```
 ~/q/p/PtSoko > queenx init
- -- Checking the directory structure on remote host...
- -- [/root/projects/PtSoko]: Creating... OK
- -- [/root/projects/PtSoko/src]: Creating... OK
- -- [/root/projects/PtSoko/inc]: Creating... OK
- -- [/root/projects/PtSoko/obj]: Creating... OK
- -- [/root/projects/PtSoko/bin]: Creating... OK
+ ==> Checking the directory structure on remote host...
+ ==> [/root/projects/PtSoko]: Creating... OK
+ ==> [/root/projects/PtSoko/src]: Creating... OK
+ ==> [/root/projects/PtSoko/inc]: Creating... OK
+ ==> [/root/projects/PtSoko/obj]: Creating... OK
+ ==> [/root/projects/PtSoko/bin]: Creating... OK
 ```
 
 Ну и соберём проект
 ```
 ~/q/p/PtSoko > queenx build
- -- Checking the directory structure on remote host...
- -- [/root/projects/PtSoko]: OK
- -- [/root/projects/PtSoko/src]: OK
- -- [/root/projects/PtSoko/inc]: OK
- -- [/root/projects/PtSoko/obj]: OK
- -- [/root/projects/PtSoko/bin]: OK
- -- Transferring files to remote host...
- -- [./src --> /root/projects/PtSoko/src]: 
+ ==> Checking the directory structure on remote host...
+ ==> [/root/projects/PtSoko]: OK
+ ==> [/root/projects/PtSoko/src]: OK
+ ==> [/root/projects/PtSoko/inc]: OK
+ ==> [/root/projects/PtSoko/obj]: OK
+ ==> [/root/projects/PtSoko/bin]: OK
+ ==> Transferring files to remote host...
+ ==> [src --> /root/projects/PtSoko/src]: 
 sending incremental file list
 src/box.cpp
           2,170 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=7/9)
@@ -99,7 +99,7 @@ src/box_place.cpp
 src/brick.cpp
           1,804 100%    1.72MB/s    0:00:00 (xfr#3, to-chk=5/9)
 src/game.cpp
-         20,998 100%   20.03MB/s    0:00:00 (xfr#4, to-chk=4/9)
+         21,000 100%   20.03MB/s    0:00:00 (xfr#4, to-chk=4/9)
 src/help.cpp
             257 100%  250.98kB/s    0:00:00 (xfr#5, to-chk=3/9)
 src/main.cpp
@@ -108,7 +108,7 @@ src/object.cpp
             809 100%  790.04kB/s    0:00:00 (xfr#7, to-chk=1/9)
 src/player.cpp
           1,903 100%    1.81MB/s    0:00:00 (xfr#8, to-chk=0/9)
- -- [./inc --> /root/projects/PtSoko/inc]: 
+ ==> [inc --> /root/projects/PtSoko/inc]: 
 sending incremental file list
 inc/box.h
           1,281 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=6/8)
@@ -124,21 +124,21 @@ inc/object.h
           1,550 100%    1.48MB/s    0:00:00 (xfr#6, to-chk=1/8)
 inc/player.h
           1,248 100%    1.19MB/s    0:00:00 (xfr#7, to-chk=0/8)
- -- [./obj --> /root/projects/PtSoko/obj]: 
+ ==> [obj --> /root/projects/PtSoko/obj]: 
 sending incremental file list
 obj/.placeholder
               0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
- -- [./bin --> /root/projects/PtSoko/bin]: 
+ ==> [bin --> /root/projects/PtSoko/bin]: 
 sending incremental file list
 bin/.placeholder
               0 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/2)
- -- [./Makefile --> /root/projects/PtSoko/Makefile]: 
+ ==> [Makefile --> /root/projects/PtSoko/Makefile]: 
 sending incremental file list
 Makefile
             699 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=0/1)
- -- Prebuild...
- -- Nothing to do
- -- Build...
+ ==> Prebuild...
+ ==> Nothing to do
+ ==> Build...
 cc -Oentx -ms -s -w1 -5r, -WC,-xss -I./inc -c -o obj/help.o src/help.cpp
 /usr/watcom/10.6/bin/wpp386 -zq -oentx -w1 -i=./inc -ms -fo=obj/help.o -xss -5r -i=/usr/watcom/10.6/usr/include -i=/usr/include src/help.cpp 
 cc -Oentx -ms -s -w1 -5r, -WC,-xss -I./inc -c -o obj/box.o src/box.cpp
@@ -163,8 +163,8 @@ Warning(1027): file obj/brick.o(/root/projects/PtSoko/src/brick.cpp): redefiniti
 Warning(1027): file obj/player.o(/root/projects/PtSoko/src/player.cpp): redefinition of _PxImageFunc ignored
 Warning(1027): file obj/game.o(/root/projects/PtSoko/src/game.cpp): redefinition of _PxImageFunc ignored
 Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition of _PxImageFunc ignored
- -- Postbuild...
- -- Nothing to do
+ ==> Postbuild...
+ ==> Nothing to do
 ```
 
 Можно запустить собранный проект через ssh сессию выполнив
