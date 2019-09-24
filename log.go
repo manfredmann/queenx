@@ -74,7 +74,6 @@ func (l *Logger) Colorln(color string, str string) {
 	fmt.Printf("%s%s\033[0m\n", color, str)
 
 	l.new_line = true
-
 }
 
 func (l *Logger) Printf(format string, a ...interface{}) {
