@@ -181,7 +181,7 @@ Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition
 tools:
   # Аргументы rsync
   rsync_args:
-  - -ru
+  - -rc
   - -P
   # Аргументы ssh для команд build и clean
   ssh_build_args:
@@ -191,6 +191,7 @@ tools:
   ssh_run_args:
   - -t
   - -t
+  - -o LogLevel=QUIET
 ```
 
 ## Шаблоны
