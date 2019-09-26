@@ -21,6 +21,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -92,7 +93,6 @@ func (prj *Project) Init(reinit bool) error {
 			if err == nil {
 				log.Println("OK")
 			} else {
-				log.Errorf("Error %v", err)
 				return err
 			}
 		} else {
@@ -111,9 +111,7 @@ func (prj *Project) Init(reinit bool) error {
 		err := prj.remote_create_dir(prj.remote_path)
 
 		if err != nil {
-			log.Errorf("Error %v\n", err)
-			log.Println("May be the project directory doesn't exists")
-			return err
+			return errors.New(fmt.Sprintf("May be the project directory doesn't exists: %v", err))
 		}
 
 		log.Println("OK")
@@ -131,7 +129,6 @@ func (prj *Project) Init(reinit bool) error {
 			err := prj.remote_create_dir(path)
 
 			if err != nil {
-				log.Errorf("Error %v", err)
 				return err
 			}
 
@@ -247,8 +244,9 @@ func (prj *Project) Build() error {
 		if err != nil {
 			return err
 		}
+	} else {
+		log.Println("Nothing to do")
 	}
-	log.Println("Nothing to do")
 
 	return nil
 }
