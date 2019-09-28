@@ -332,6 +332,24 @@ func (qx *queenx) Run() error {
 				{
 					prj.Run(qx.args[1:], qx.node)
 				}
+			default:
+				{
+					var cmd_found = false
+
+					for _, cmd := range prj.config.Run.Custom {
+						if strings.Compare(qx.args[0], cmd.Name) == 0 {
+							var args = cmd.Args
+							args = append(args, qx.args[1:]...)
+
+							cmd_found = true
+							prj.Run(args, qx.node)
+						}
+					}
+
+					if !cmd_found {
+						return errors.New("Unknown command")
+					}
+				}
 			}
 
 			if err != nil {

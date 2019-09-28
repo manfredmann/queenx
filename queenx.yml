@@ -31,3 +31,19 @@ run:
   bin_path: "bin"
   # Имя бинарника
   bin_name: "pname"
+  # Кастомные команды
+  custom:
+    - 
+      name: "test"
+      args:
+        - -1
+        - -2
+        - -3
+    - 
+      name: "test2"
+      args:
+        - -1
+        - -2
+        - -3
+        - -4
+        - -5

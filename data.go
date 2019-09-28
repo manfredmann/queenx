@@ -20,6 +20,11 @@
 
 package main
 
+type CustomCmd struct {
+	Name string   `yaml:"name"`
+	Args []string `yaml:"args"`
+}
+
 type ProjectConfiguration struct {
 	Local struct {
 		Project_name  string   `yaml:"project_name"`
@@ -37,8 +42,9 @@ type ProjectConfiguration struct {
 		Cmd_clean string `yaml:"cmd_clean"`
 	} `yaml:"build"`
 	Run struct {
-		Bin_path string `yaml:"bin_path"`
-		Bin_name string `yaml:"bin_name"`
+		Bin_path string      `yaml:"bin_path"`
+		Bin_name string      `yaml:"bin_name"`
+		Custom   []CustomCmd `yaml:"custom"`
 	} `yaml:"run"`
 }
 

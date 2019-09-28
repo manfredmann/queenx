@@ -30,8 +30,8 @@ var log = LoggerInit(" ==> ", Color_GREENL)
 
 func main() {
 	flag.Usage = func() {
-		fmt.Printf("Usage: %s [-h hostname] [-n node] [-r] action\n\n", os.Args[0])
-		fmt.Println("  action")
+		fmt.Printf("Usage: %s [-h hostname] [-n node] [-r] command\n\n", os.Args[0])
+		fmt.Println("  command")
 		fmt.Println("    new <name>  - Create the project from template")
 		fmt.Println("    init        - Init the directory structure")
 		fmt.Println("    build       - Build the project")

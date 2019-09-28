@@ -65,6 +65,22 @@ run:
   bin_path: "bin"
   # Имя бинарника
   bin_name: "PtSoko"
+  # Кастомные команды
+  custom:
+    - 
+      name: "test"
+      args:
+        - -1
+        - -2
+        - -3
+    - 
+      name: "test2"
+      args:
+        - -1
+        - -2
+        - -3
+        - -4
+        - -5
 ```
 Адрес хоста можно передать в параметрах при помощи ключа -h
 
@@ -167,6 +183,7 @@ Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition
  ==> Nothing to do
 ```
 
+## Запуск
 Можно запустить собранный проект через ssh сессию выполнив
 ```
  > queenx run
@@ -174,6 +191,58 @@ Warning(1027): file obj/main.o(/root/projects/PtSoko/src/main.cpp): redefinition
 Все аргументы cli после run будут переданы запускаемому приложению. Каталог с бинарником относительно корня проекта, и имя бинарника берутся из файла конфигурации проекта. Если не заданы, каталог по умолчанию - bin, имя бинарника = имя проекта
 
 Чтобы запустить проект на определённой node, номер можно передать через параметр -n
+
+В файле конфигурации проекта можно указать дополнительные команды с аргументами запуска.
+Например:
+```yml
+run:
+  bin_path: "bin"
+  bin_name: "qnx4opts"
+  custom:
+    - 
+      name: "test"
+      args:
+        - -i 1
+        - -f 3.14
+        - -s hello
+    - 
+      name: "test2"
+      args:
+        - -i 1
+        - -f 3.14
+        - -s "Hello, world!"
+        - -e 0xAA55
+```
+Вызывать их можно так:
+```
+> queenx test
+ ==> Binary path: /root/projects/qnx4opts/bin
+ ==> Binary name: qnx4opts
+int = 1
+float = 3.140000
+string = hello
+```
+```
+> queenx test2
+ ==> Binary path: /root/projects/qnx4opts/bin
+ ==> Binary name: qnx4opts
+int = 1
+float = 3.140000
+string = Hello, world!
+hex = 0xAA55
+```
+```
+> queenx test2 -t --test -vvv
+ ==> Binary path: /root/projects/qnx4opts/bin
+ ==> Binary name: qnx4opts
+t is present!
+Test is present!
+int = 1
+float = 3.140000
+string = Hello, world!
+hex = 0xAA55
+Verbose level: 3
+```
 
 ## Файл конфигурации
 При первом запуске автоматически создаётся файл конфигурации ~/.config/queenx/config.yml
