@@ -229,13 +229,13 @@ func (qx *queenx) Run() error {
 		err := os.MkdirAll(qx.config_dir, 0755)
 
 		if err != nil {
-			return errors.New(fmt.Sprintf("Couldn't create configuration diretory: %v", err))
+			return errors.New(fmt.Sprintf("Couldn't create configuration directory: %v", err))
 		}
 
 		err = os.Mkdir(qx.templates_dir, 0755)
 
 		if err != nil {
-			return errors.New(fmt.Sprintf("Couldn't create templates diretory: %v", err))
+			return errors.New(fmt.Sprintf("Couldn't create templates directory: %v", err))
 		}
 	}
 
