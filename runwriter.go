@@ -52,5 +52,5 @@ func (w *runWriter) Write(p []byte) (int, error) {
 }
 
 func (w *runWriter) Close() error {
-	return nil
+	return w.logfile.Close()
 }
