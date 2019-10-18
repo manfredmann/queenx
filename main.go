@@ -44,6 +44,7 @@ func main() {
 	host_ptr := flag.String("h", "", "Host name")
 	node_ptr := flag.Uint("n", 0, "Run on the node")
 	reinit_ptr := flag.Bool("r", false, "Reinit (the directory structure on remote host will be removed)")
+	logout_ptr := flag.Bool("l", false, "Log stdout and stderr to files")
 
 	flag.Parse()
 
@@ -52,7 +53,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	var qx = QueenxInit(flag.Args(), *host_ptr, *node_ptr, *reinit_ptr)
+	var qx = QueenxInit(flag.Args(), *host_ptr, *node_ptr, *reinit_ptr, *logout_ptr)
 
 	var err = qx.Run()
 

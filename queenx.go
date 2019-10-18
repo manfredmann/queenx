@@ -42,9 +42,10 @@ type queenx struct {
 	host          string
 	node          uint
 	reinit        bool
+	logout        bool
 }
 
-func QueenxInit(args []string, host string, node uint, reinit bool) queenx {
+func QueenxInit(args []string, host string, node uint, reinit bool, logout bool) queenx {
 	var qx queenx
 
 	qx.config_dir = filepath.Join(os.Getenv("HOME"), ".config", "queenx")
@@ -54,6 +55,7 @@ func QueenxInit(args []string, host string, node uint, reinit bool) queenx {
 	qx.node = node
 	qx.reinit = reinit
 	qx.host = host
+	qx.logout = logout
 
 	return qx
 }
@@ -85,6 +87,10 @@ func (qx *queenx) load_configuration() error {
 
 	if len(qx.host) != 0 {
 		qx.config_prj.Remote.Host = qx.host
+	}
+
+	if qx.logout {
+		qx.config_prj.Run.Log_output = true
 	}
 
 	qx.config_prj.Local.Project_name = strings.TrimSpace(qx.config_prj.Local.Project_name)

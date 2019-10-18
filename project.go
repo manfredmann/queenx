@@ -66,7 +66,7 @@ func (prj *Project) remote_create_dir(path string) error {
 }
 
 func (prj *Project) remote_remove_dir(path string) error {
-	cmd := exec.Command(bin_ssh, prj.remote_host, "rm -r", path)
+	cmd := exec.Command(bin_ssh, prj.remote_host, "rm -rf", path)
 
 	return cmd.Run()
 }
@@ -317,8 +317,32 @@ func (prj *Project) Run(args []string, node uint) {
 
 	cmd = exec.Command(bin_ssh, ssh_args...)
 
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	if prj.config.Run.Log_output {
+		stdout_writer, err := newRunWriter(fmt.Sprintf("%s.stdout.log", bin_name), os.Stdout)
+
+		if err != nil {
+			log.Warningf("Couldn't create \"%s.stdout.log\" file: %v. Output to stdout only\n", err, bin_name)
+
+			cmd.Stdout = os.Stdout
+		} else {
+			cmd.Stdout = stdout_writer
+		}
+
+		stderr_writer, err := newRunWriter(fmt.Sprintf("%s.stderr.log", bin_name), os.Stderr)
+
+		if err != nil {
+			log.Warningf("Couldn't create \"%s.stderr.log\" file: %v. Output to stderr only\n", err, bin_name)
+
+			cmd.Stderr = os.Stderr
+		} else {
+			cmd.Stderr = stderr_writer
+
+		}
+	} else {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
+
 	cmd.Stdin = os.Stdin
 
 	cmd.Run()

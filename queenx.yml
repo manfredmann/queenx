@@ -27,6 +27,8 @@ build:
   cmd_clean: "make clean"
 # Параметры для команды run
 run:
+  # Запись stdout и stderr в файл
+  log_output: true
   # Каталог с бинарником
   bin_path: "bin"
   # Имя бинарника
