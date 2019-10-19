@@ -321,7 +321,7 @@ func (prj *Project) Run(args []string, node uint) {
 		stdout_writer, err := newRunWriter(fmt.Sprintf("%s.stdout.log", bin_name), os.Stdout)
 
 		if err != nil {
-			log.Warningf("Couldn't create \"%s.stdout.log\" file: %v. Output to stdout only\n", err, bin_name)
+			log.Warningf("Couldn't create \"%s.stdout.log\" file: %v. Output to stdout only\n", bin_name, err)
 
 			cmd.Stdout = os.Stdout
 		} else {
@@ -331,7 +331,7 @@ func (prj *Project) Run(args []string, node uint) {
 		stderr_writer, err := newRunWriter(fmt.Sprintf("%s.stderr.log", bin_name), os.Stderr)
 
 		if err != nil {
-			log.Warningf("Couldn't create \"%s.stderr.log\" file: %v. Output to stderr only\n", err, bin_name)
+			log.Warningf("Couldn't create \"%s.stderr.log\" file: %v. Output to stderr only\n", bin_name, err)
 
 			cmd.Stderr = os.Stderr
 		} else {
