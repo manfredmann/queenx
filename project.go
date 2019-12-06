@@ -313,6 +313,11 @@ func (prj *Project) Run(args []string, node uint) {
 
 	ssh_args = append(ssh_args, prj.remote_host)
 	ssh_args = append(ssh_args, prj_cmd)
+
+	for arg_i, arg := range args {
+		args[arg_i] = fmt.Sprintf("\"%s\"", arg)
+	}
+
 	ssh_args = append(ssh_args, args...)
 
 	cmd = exec.Command(bin_ssh, ssh_args...)
