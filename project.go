@@ -306,7 +306,7 @@ func (prj *Project) Run(args []string, node uint) {
 	if node == 0 {
 		prj_cmd = fmt.Sprintf("cd \"%s\" && \"./%s\"", bin_path, prj.config.Local.Project_name)
 	} else {
-		prj_cmd = fmt.Sprintf("cd \"%s\" && on -n%d \"./%s\"", bin_path, node, prj.config.Local.Project_name)
+		prj_cmd = fmt.Sprintf("cd \"%s\" && on -n%d \"./%s\"", bin_path, node, bin_name)
 	}
 
 	var ssh_args = prj.config_qx.Tools.SSH_Run_args
